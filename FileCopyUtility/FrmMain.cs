@@ -98,7 +98,7 @@ namespace FileCopyUtility
                      {
                          case FilePair.FileCoherentStatus.FilesAreEven:
                              if (!this.chkFilesEven.Checked) { return; }
-                             statusText = "File are even";
+                             statusText = "Files are even";
                              rowColor = Color.White;
                              break;
                          case FilePair.FileCoherentStatus.GameRootAndRepoIsMissing:
