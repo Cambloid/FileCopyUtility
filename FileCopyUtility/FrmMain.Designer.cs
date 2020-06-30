@@ -107,7 +107,7 @@
             // 
             // colLastChangedGR
             // 
-            this.colLastChangedGR.Text = "List changed gameroot";
+            this.colLastChangedGR.Text = "Last changed gameroot";
             this.colLastChangedGR.Width = 132;
             // 
             // colStatus
