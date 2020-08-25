@@ -28,30 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("PkgMapTemplate");
-            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("PkgCustomPerk1");
-            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("FileXY.gdt", new System.Windows.Forms.TreeNode[] {
-            treeNode22,
-            treeNode23});
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("PkgMapTemplate");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("PkgCustomPerk1");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("FileXY.gdt", new System.Windows.Forms.TreeNode[] {
+            treeNode4,
+            treeNode5});
             this.lblBackupFolder = new System.Windows.Forms.Label();
             this.btnBackupDir = new System.Windows.Forms.Button();
             this.txtBackupDir = new System.Windows.Forms.TextBox();
-            this.btnNewFileList = new System.Windows.Forms.Button();
             this.lblProjectFile = new System.Windows.Forms.Label();
-            this.btnBrowseFileList = new System.Windows.Forms.Button();
-            this.txtFileList = new System.Windows.Forms.TextBox();
+            this.btnBrowseStorage = new System.Windows.Forms.Button();
+            this.txtStoragePath = new System.Windows.Forms.TextBox();
             this.lblGameRoot = new System.Windows.Forms.Label();
             this.lblStorage = new System.Windows.Forms.Label();
             this.btnBrowseGameRoot = new System.Windows.Forms.Button();
-            this.btnBrowseRepo = new System.Windows.Forms.Button();
+            this.btnBrowsePrjFile = new System.Windows.Forms.Button();
             this.txtGameRoot = new System.Windows.Forms.TextBox();
-            this.txtPathRepo = new System.Windows.Forms.TextBox();
+            this.txtProjectFile = new System.Windows.Forms.TextBox();
             this.tbcOperations = new System.Windows.Forms.TabControl();
             this.tbContent = new System.Windows.Forms.TabPage();
             this.grpActions = new System.Windows.Forms.GroupBox();
             this.btnRefresh = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.btnInstall = new System.Windows.Forms.Button();
+            this.btnRemovePkg = new System.Windows.Forms.Button();
+            this.btnInstallPkg = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.lblCredits = new System.Windows.Forms.Label();
@@ -78,6 +78,8 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.grpFileOp = new System.Windows.Forms.GroupBox();
+            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.button2 = new System.Windows.Forms.Button();
             this.btnSelect = new System.Windows.Forms.Button();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
@@ -85,8 +87,10 @@
             this.trvConflicts = new System.Windows.Forms.TreeView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnExec = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.btnNewProjectFile = new System.Windows.Forms.Button();
+            this.ctxCredits = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmiAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiRemove = new System.Windows.Forms.ToolStripMenuItem();
             this.tbcOperations.SuspendLayout();
             this.tbContent.SuspendLayout();
             this.grpActions.SuspendLayout();
@@ -95,12 +99,13 @@
             this.grpAutomatic.SuspendLayout();
             this.grpFileOp.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.ctxCredits.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblBackupFolder
             // 
             this.lblBackupFolder.AutoSize = true;
-            this.lblBackupFolder.Location = new System.Drawing.Point(10, 87);
+            this.lblBackupFolder.Location = new System.Drawing.Point(8, 87);
             this.lblBackupFolder.Name = "lblBackupFolder";
             this.lblBackupFolder.Size = new System.Drawing.Size(58, 13);
             this.lblBackupFolder.TabIndex = 29;
@@ -115,6 +120,7 @@
             this.btnBackupDir.TabIndex = 28;
             this.btnBackupDir.Text = "...";
             this.btnBackupDir.UseVisualStyleBackColor = true;
+            this.btnBackupDir.Click += new System.EventHandler(this.btnBackupDir_Click);
             // 
             // txtBackupDir
             // 
@@ -126,49 +132,40 @@
             this.txtBackupDir.Size = new System.Drawing.Size(1422, 20);
             this.txtBackupDir.TabIndex = 27;
             // 
-            // btnNewFileList
-            // 
-            this.btnNewFileList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnNewFileList.Location = new System.Drawing.Point(1465, 58);
-            this.btnNewFileList.Name = "btnNewFileList";
-            this.btnNewFileList.Size = new System.Drawing.Size(29, 20);
-            this.btnNewFileList.TabIndex = 26;
-            this.btnNewFileList.Text = "+";
-            this.btnNewFileList.UseVisualStyleBackColor = true;
-            // 
             // lblProjectFile
             // 
             this.lblProjectFile.AutoSize = true;
-            this.lblProjectFile.Location = new System.Drawing.Point(12, 62);
+            this.lblProjectFile.Location = new System.Drawing.Point(10, 10);
             this.lblProjectFile.Name = "lblProjectFile";
             this.lblProjectFile.Size = new System.Drawing.Size(56, 13);
             this.lblProjectFile.TabIndex = 25;
             this.lblProjectFile.Text = "Project file";
             // 
-            // btnBrowseFileList
+            // btnBrowseStorage
             // 
-            this.btnBrowseFileList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowseFileList.Location = new System.Drawing.Point(1500, 58);
-            this.btnBrowseFileList.Name = "btnBrowseFileList";
-            this.btnBrowseFileList.Size = new System.Drawing.Size(54, 20);
-            this.btnBrowseFileList.TabIndex = 24;
-            this.btnBrowseFileList.Text = "...";
-            this.btnBrowseFileList.UseVisualStyleBackColor = true;
+            this.btnBrowseStorage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowseStorage.Location = new System.Drawing.Point(1500, 58);
+            this.btnBrowseStorage.Name = "btnBrowseStorage";
+            this.btnBrowseStorage.Size = new System.Drawing.Size(54, 20);
+            this.btnBrowseStorage.TabIndex = 24;
+            this.btnBrowseStorage.Text = "...";
+            this.btnBrowseStorage.UseVisualStyleBackColor = true;
+            this.btnBrowseStorage.Click += new System.EventHandler(this.btnBrowseStorage_Click);
             // 
-            // txtFileList
+            // txtStoragePath
             // 
-            this.txtFileList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtStoragePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtFileList.Location = new System.Drawing.Point(72, 58);
-            this.txtFileList.Name = "txtFileList";
-            this.txtFileList.ReadOnly = true;
-            this.txtFileList.Size = new System.Drawing.Size(1387, 20);
-            this.txtFileList.TabIndex = 23;
+            this.txtStoragePath.Location = new System.Drawing.Point(72, 58);
+            this.txtStoragePath.Name = "txtStoragePath";
+            this.txtStoragePath.ReadOnly = true;
+            this.txtStoragePath.Size = new System.Drawing.Size(1422, 20);
+            this.txtStoragePath.TabIndex = 23;
             // 
             // lblGameRoot
             // 
             this.lblGameRoot.AutoSize = true;
-            this.lblGameRoot.Location = new System.Drawing.Point(12, 36);
+            this.lblGameRoot.Location = new System.Drawing.Point(10, 36);
             this.lblGameRoot.Name = "lblGameRoot";
             this.lblGameRoot.Size = new System.Drawing.Size(56, 13);
             this.lblGameRoot.TabIndex = 22;
@@ -177,7 +174,7 @@
             // lblStorage
             // 
             this.lblStorage.AutoSize = true;
-            this.lblStorage.Location = new System.Drawing.Point(22, 10);
+            this.lblStorage.Location = new System.Drawing.Point(22, 61);
             this.lblStorage.Name = "lblStorage";
             this.lblStorage.Size = new System.Drawing.Size(44, 13);
             this.lblStorage.TabIndex = 21;
@@ -192,16 +189,18 @@
             this.btnBrowseGameRoot.TabIndex = 20;
             this.btnBrowseGameRoot.Text = "...";
             this.btnBrowseGameRoot.UseVisualStyleBackColor = true;
+            this.btnBrowseGameRoot.Click += new System.EventHandler(this.btnBrowseGameRoot_Click);
             // 
-            // btnBrowseRepo
+            // btnBrowsePrjFile
             // 
-            this.btnBrowseRepo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowseRepo.Location = new System.Drawing.Point(1500, 6);
-            this.btnBrowseRepo.Name = "btnBrowseRepo";
-            this.btnBrowseRepo.Size = new System.Drawing.Size(54, 20);
-            this.btnBrowseRepo.TabIndex = 19;
-            this.btnBrowseRepo.Text = "...";
-            this.btnBrowseRepo.UseVisualStyleBackColor = true;
+            this.btnBrowsePrjFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowsePrjFile.Location = new System.Drawing.Point(1500, 6);
+            this.btnBrowsePrjFile.Name = "btnBrowsePrjFile";
+            this.btnBrowsePrjFile.Size = new System.Drawing.Size(54, 20);
+            this.btnBrowsePrjFile.TabIndex = 19;
+            this.btnBrowsePrjFile.Text = "...";
+            this.btnBrowsePrjFile.UseVisualStyleBackColor = true;
+            this.btnBrowsePrjFile.Click += new System.EventHandler(this.btnBrowsePrjFile_Click);
             // 
             // txtGameRoot
             // 
@@ -213,15 +212,15 @@
             this.txtGameRoot.Size = new System.Drawing.Size(1422, 20);
             this.txtGameRoot.TabIndex = 18;
             // 
-            // txtPathRepo
+            // txtProjectFile
             // 
-            this.txtPathRepo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtProjectFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPathRepo.Location = new System.Drawing.Point(72, 6);
-            this.txtPathRepo.Name = "txtPathRepo";
-            this.txtPathRepo.ReadOnly = true;
-            this.txtPathRepo.Size = new System.Drawing.Size(1422, 20);
-            this.txtPathRepo.TabIndex = 17;
+            this.txtProjectFile.Location = new System.Drawing.Point(72, 6);
+            this.txtProjectFile.Name = "txtProjectFile";
+            this.txtProjectFile.ReadOnly = true;
+            this.txtProjectFile.Size = new System.Drawing.Size(1387, 20);
+            this.txtProjectFile.TabIndex = 17;
             // 
             // tbcOperations
             // 
@@ -265,8 +264,8 @@
             // grpActions
             // 
             this.grpActions.Controls.Add(this.btnRefresh);
-            this.grpActions.Controls.Add(this.button4);
-            this.grpActions.Controls.Add(this.btnInstall);
+            this.grpActions.Controls.Add(this.btnRemovePkg);
+            this.grpActions.Controls.Add(this.btnInstallPkg);
             this.grpActions.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.grpActions.Location = new System.Drawing.Point(588, 511);
             this.grpActions.Name = "grpActions";
@@ -283,24 +282,27 @@
             this.btnRefresh.TabIndex = 46;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
-            // button4
+            // btnRemovePkg
             // 
-            this.button4.Location = new System.Drawing.Point(684, 47);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(123, 22);
-            this.button4.TabIndex = 45;
-            this.button4.Text = "Remove Package";
-            this.button4.UseVisualStyleBackColor = true;
+            this.btnRemovePkg.Location = new System.Drawing.Point(684, 47);
+            this.btnRemovePkg.Name = "btnRemovePkg";
+            this.btnRemovePkg.Size = new System.Drawing.Size(123, 22);
+            this.btnRemovePkg.TabIndex = 45;
+            this.btnRemovePkg.Text = "Remove Package";
+            this.btnRemovePkg.UseVisualStyleBackColor = true;
+            this.btnRemovePkg.Click += new System.EventHandler(this.btnRemovePkg_Click);
             // 
-            // btnInstall
+            // btnInstallPkg
             // 
-            this.btnInstall.Location = new System.Drawing.Point(813, 47);
-            this.btnInstall.Name = "btnInstall";
-            this.btnInstall.Size = new System.Drawing.Size(123, 22);
-            this.btnInstall.TabIndex = 44;
-            this.btnInstall.Text = "Install Package";
-            this.btnInstall.UseVisualStyleBackColor = true;
+            this.btnInstallPkg.Location = new System.Drawing.Point(813, 47);
+            this.btnInstallPkg.Name = "btnInstallPkg";
+            this.btnInstallPkg.Size = new System.Drawing.Size(123, 22);
+            this.btnInstallPkg.TabIndex = 44;
+            this.btnInstallPkg.Text = "Install Package";
+            this.btnInstallPkg.UseVisualStyleBackColor = true;
+            this.btnInstallPkg.Click += new System.EventHandler(this.btnInstallPkg_Click);
             // 
             // lblStatus
             // 
@@ -330,6 +332,7 @@
             // 
             // lstCredits
             // 
+            this.lstCredits.ContextMenuStrip = this.ctxCredits;
             this.lstCredits.FormattingEnabled = true;
             this.lstCredits.Location = new System.Drawing.Point(687, 96);
             this.lstCredits.Name = "lstCredits";
@@ -549,6 +552,26 @@
             this.grpFileOp.TabStop = false;
             this.grpFileOp.Text = "Use file from ...";
             // 
+            // radioButton3
+            // 
+            this.radioButton3.AutoSize = true;
+            this.radioButton3.Location = new System.Drawing.Point(13, 65);
+            this.radioButton3.Name = "radioButton3";
+            this.radioButton3.Size = new System.Drawing.Size(72, 17);
+            this.radioButton3.TabIndex = 58;
+            this.radioButton3.TabStop = true;
+            this.radioButton3.Text = "root folder";
+            this.radioButton3.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(148, 63);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(244, 21);
+            this.button2.TabIndex = 57;
+            this.button2.Text = "Add file from root to new pkg";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
             // btnSelect
             // 
             this.btnSelect.Location = new System.Drawing.Point(397, 40);
@@ -593,14 +616,14 @@
             this.trvConflicts.Dock = System.Windows.Forms.DockStyle.Left;
             this.trvConflicts.Location = new System.Drawing.Point(3, 3);
             this.trvConflicts.Name = "trvConflicts";
-            treeNode22.Name = "nodePkg";
-            treeNode22.Text = "PkgMapTemplate";
-            treeNode23.Name = "nodePkg";
-            treeNode23.Text = "PkgCustomPerk1";
-            treeNode24.Name = "nodeFileName";
-            treeNode24.Text = "FileXY.gdt";
+            treeNode4.Name = "nodePkg";
+            treeNode4.Text = "PkgMapTemplate";
+            treeNode5.Name = "nodePkg";
+            treeNode5.Text = "PkgCustomPerk1";
+            treeNode6.Name = "nodeFileName";
+            treeNode6.Text = "FileXY.gdt";
             this.trvConflicts.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode24});
+            treeNode6});
             this.trvConflicts.Size = new System.Drawing.Size(481, 610);
             this.trvConflicts.TabIndex = 38;
             // 
@@ -624,45 +647,58 @@
             this.btnExec.Text = "Save";
             this.btnExec.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // btnNewProjectFile
             // 
-            this.button2.Location = new System.Drawing.Point(148, 63);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(244, 21);
-            this.button2.TabIndex = 57;
-            this.button2.Text = "Add file from root to new pkg";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnNewProjectFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnNewProjectFile.Location = new System.Drawing.Point(1465, 6);
+            this.btnNewProjectFile.Name = "btnNewProjectFile";
+            this.btnNewProjectFile.Size = new System.Drawing.Size(29, 20);
+            this.btnNewProjectFile.TabIndex = 33;
+            this.btnNewProjectFile.Text = "+";
+            this.btnNewProjectFile.UseVisualStyleBackColor = true;
+            this.btnNewProjectFile.Click += new System.EventHandler(this.btnNewProjectFile_Click);
             // 
-            // radioButton3
+            // ctxCredits
             // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(13, 65);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(72, 17);
-            this.radioButton3.TabIndex = 58;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "root folder";
-            this.radioButton3.UseVisualStyleBackColor = true;
+            this.ctxCredits.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmiAdd,
+            this.cmiRemove});
+            this.ctxCredits.Name = "ctxCredits";
+            this.ctxCredits.Size = new System.Drawing.Size(118, 48);
+            // 
+            // cmiAdd
+            // 
+            this.cmiAdd.Name = "cmiAdd";
+            this.cmiAdd.Size = new System.Drawing.Size(117, 22);
+            this.cmiAdd.Text = "Add";
+            this.cmiAdd.Click += new System.EventHandler(this.cmiAdd_Click);
+            // 
+            // cmiRemove
+            // 
+            this.cmiRemove.Name = "cmiRemove";
+            this.cmiRemove.Size = new System.Drawing.Size(117, 22);
+            this.cmiRemove.Text = "Remove";
+            this.cmiRemove.Click += new System.EventHandler(this.cmiRemove_Click);
             // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1566, 793);
+            this.Controls.Add(this.btnNewProjectFile);
             this.Controls.Add(this.tbcOperations);
             this.Controls.Add(this.lblBackupFolder);
             this.Controls.Add(this.btnBackupDir);
             this.Controls.Add(this.txtBackupDir);
-            this.Controls.Add(this.btnNewFileList);
             this.Controls.Add(this.lblProjectFile);
-            this.Controls.Add(this.btnBrowseFileList);
-            this.Controls.Add(this.txtFileList);
+            this.Controls.Add(this.btnBrowseStorage);
+            this.Controls.Add(this.txtStoragePath);
             this.Controls.Add(this.lblGameRoot);
             this.Controls.Add(this.lblStorage);
             this.Controls.Add(this.btnBrowseGameRoot);
-            this.Controls.Add(this.btnBrowseRepo);
+            this.Controls.Add(this.btnBrowsePrjFile);
             this.Controls.Add(this.txtGameRoot);
-            this.Controls.Add(this.txtPathRepo);
+            this.Controls.Add(this.txtProjectFile);
             this.Name = "FrmMain";
             this.Text = "Content Manager";
             this.tbcOperations.ResumeLayout(false);
@@ -675,6 +711,7 @@
             this.grpFileOp.ResumeLayout(false);
             this.grpFileOp.PerformLayout();
             this.panel1.ResumeLayout(false);
+            this.ctxCredits.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -685,16 +722,15 @@
         private System.Windows.Forms.Label lblBackupFolder;
         private System.Windows.Forms.Button btnBackupDir;
         private System.Windows.Forms.TextBox txtBackupDir;
-        private System.Windows.Forms.Button btnNewFileList;
         private System.Windows.Forms.Label lblProjectFile;
-        private System.Windows.Forms.Button btnBrowseFileList;
-        private System.Windows.Forms.TextBox txtFileList;
+        private System.Windows.Forms.Button btnBrowseStorage;
+        private System.Windows.Forms.TextBox txtStoragePath;
         private System.Windows.Forms.Label lblGameRoot;
         private System.Windows.Forms.Label lblStorage;
         private System.Windows.Forms.Button btnBrowseGameRoot;
-        private System.Windows.Forms.Button btnBrowseRepo;
+        private System.Windows.Forms.Button btnBrowsePrjFile;
         private System.Windows.Forms.TextBox txtGameRoot;
-        private System.Windows.Forms.TextBox txtPathRepo;
+        private System.Windows.Forms.TextBox txtProjectFile;
         private System.Windows.Forms.TabControl tbcOperations;
         private System.Windows.Forms.TabPage tbContent;
         private System.Windows.Forms.TreeView trvFiles;
@@ -730,12 +766,16 @@
         private System.Windows.Forms.GroupBox grpAutomatic;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.GroupBox grpActions;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button btnInstall;
+        private System.Windows.Forms.Button btnRemovePkg;
+        private System.Windows.Forms.Button btnInstallPkg;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.RadioButton radioButton3;
+        private System.Windows.Forms.Button btnNewProjectFile;
+        private System.Windows.Forms.ContextMenuStrip ctxCredits;
+        private System.Windows.Forms.ToolStripMenuItem cmiAdd;
+        private System.Windows.Forms.ToolStripMenuItem cmiRemove;
     }
 }
 

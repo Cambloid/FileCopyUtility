@@ -46,11 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConflictList.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="FrmInput.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ConflictList.Designer.cs">
-      <DependentUpon>ConflictList.cs</DependentUpon>
+    <Compile Include="FrmInput.Designer.cs">
+      <DependentUpon>FrmInput.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
@@ -61,8 +61,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="ProjectConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="ConflictList.resx">
-      <DependentUpon>ConflictList.cs</DependentUpon>
+    <EmbeddedResource Include="FrmInput.resx">
+      <DependentUpon>FrmInput.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
