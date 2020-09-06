@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("PkgMapTemplate");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("PkgCustomPerk1");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("FileXY.gdt", new System.Windows.Forms.TreeNode[] {
-            treeNode4,
-            treeNode5});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("PkgMapTemplate");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("PkgCustomPerk1");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("FileXY.gdt", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2});
             this.lblBackupFolder = new System.Windows.Forms.Label();
             this.btnBackupDir = new System.Windows.Forms.Button();
             this.txtBackupDir = new System.Windows.Forms.TextBox();
@@ -56,6 +56,9 @@
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.lblCredits = new System.Windows.Forms.Label();
             this.lstCredits = new System.Windows.Forms.ListBox();
+            this.ctxCredits = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmiAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiRemove = new System.Windows.Forms.ToolStripMenuItem();
             this.lblPackageSize = new System.Windows.Forms.Label();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.lblPackagePath = new System.Windows.Forms.Label();
@@ -65,7 +68,7 @@
             this.lblPackageName = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.trvFiles = new System.Windows.Forms.TreeView();
-            this.listFiles = new System.Windows.Forms.ListView();
+            this.lstPackages = new System.Windows.Forms.ListView();
             this.colPackage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnRemove = new System.Windows.Forms.Button();
@@ -88,18 +91,18 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnExec = new System.Windows.Forms.Button();
             this.btnNewProjectFile = new System.Windows.Forms.Button();
-            this.ctxCredits = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cmiAdd = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmiRemove = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblPackageHash = new System.Windows.Forms.Label();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.grpPkgStatus = new System.Windows.Forms.GroupBox();
             this.tbcOperations.SuspendLayout();
             this.tbContent.SuspendLayout();
             this.grpActions.SuspendLayout();
+            this.ctxCredits.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tbConflicts.SuspendLayout();
             this.grpAutomatic.SuspendLayout();
             this.grpFileOp.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.ctxCredits.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblBackupFolder
@@ -237,6 +240,9 @@
             // 
             // tbContent
             // 
+            this.tbContent.Controls.Add(this.grpPkgStatus);
+            this.tbContent.Controls.Add(this.lblPackageHash);
+            this.tbContent.Controls.Add(this.textBox7);
             this.tbContent.Controls.Add(this.grpActions);
             this.tbContent.Controls.Add(this.lblStatus);
             this.tbContent.Controls.Add(this.textBox6);
@@ -251,7 +257,7 @@
             this.tbContent.Controls.Add(this.lblPackageName);
             this.tbContent.Controls.Add(this.textBox1);
             this.tbContent.Controls.Add(this.trvFiles);
-            this.tbContent.Controls.Add(this.listFiles);
+            this.tbContent.Controls.Add(this.lstPackages);
             this.tbContent.Controls.Add(this.panel2);
             this.tbContent.Location = new System.Drawing.Point(4, 22);
             this.tbContent.Name = "tbContent";
@@ -307,7 +313,7 @@
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(953, 72);
+            this.lblStatus.Location = new System.Drawing.Point(953, 98);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(84, 13);
             this.lblStatus.TabIndex = 50;
@@ -315,7 +321,7 @@
             // 
             // textBox6
             // 
-            this.textBox6.Location = new System.Drawing.Point(1043, 69);
+            this.textBox6.Location = new System.Drawing.Point(1043, 95);
             this.textBox6.Name = "textBox6";
             this.textBox6.ReadOnly = true;
             this.textBox6.Size = new System.Drawing.Size(100, 20);
@@ -324,7 +330,7 @@
             // lblCredits
             // 
             this.lblCredits.AutoSize = true;
-            this.lblCredits.Location = new System.Drawing.Point(594, 96);
+            this.lblCredits.Location = new System.Drawing.Point(594, 122);
             this.lblCredits.Name = "lblCredits";
             this.lblCredits.Size = new System.Drawing.Size(87, 13);
             this.lblCredits.TabIndex = 48;
@@ -334,15 +340,37 @@
             // 
             this.lstCredits.ContextMenuStrip = this.ctxCredits;
             this.lstCredits.FormattingEnabled = true;
-            this.lstCredits.Location = new System.Drawing.Point(687, 96);
+            this.lstCredits.Location = new System.Drawing.Point(687, 122);
             this.lstCredits.Name = "lstCredits";
             this.lstCredits.Size = new System.Drawing.Size(277, 186);
             this.lstCredits.TabIndex = 47;
             // 
+            // ctxCredits
+            // 
+            this.ctxCredits.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmiAdd,
+            this.cmiRemove});
+            this.ctxCredits.Name = "ctxCredits";
+            this.ctxCredits.Size = new System.Drawing.Size(118, 48);
+            // 
+            // cmiAdd
+            // 
+            this.cmiAdd.Name = "cmiAdd";
+            this.cmiAdd.Size = new System.Drawing.Size(117, 22);
+            this.cmiAdd.Text = "Add";
+            this.cmiAdd.Click += new System.EventHandler(this.cmiAdd_Click);
+            // 
+            // cmiRemove
+            // 
+            this.cmiRemove.Name = "cmiRemove";
+            this.cmiRemove.Size = new System.Drawing.Size(117, 22);
+            this.cmiRemove.Text = "Remove";
+            this.cmiRemove.Click += new System.EventHandler(this.cmiRemove_Click);
+            // 
             // lblPackageSize
             // 
             this.lblPackageSize.AutoSize = true;
-            this.lblPackageSize.Location = new System.Drawing.Point(607, 72);
+            this.lblPackageSize.Location = new System.Drawing.Point(607, 98);
             this.lblPackageSize.Name = "lblPackageSize";
             this.lblPackageSize.Size = new System.Drawing.Size(74, 13);
             this.lblPackageSize.TabIndex = 46;
@@ -350,10 +378,10 @@
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(687, 69);
+            this.textBox4.Location = new System.Drawing.Point(687, 95);
             this.textBox4.Name = "textBox4";
             this.textBox4.ReadOnly = true;
-            this.textBox4.Size = new System.Drawing.Size(62, 20);
+            this.textBox4.Size = new System.Drawing.Size(102, 20);
             this.textBox4.TabIndex = 45;
             // 
             // lblPackagePath
@@ -413,20 +441,21 @@
             this.trvFiles.Size = new System.Drawing.Size(372, 608);
             this.trvFiles.TabIndex = 33;
             // 
-            // listFiles
+            // lstPackages
             // 
-            this.listFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lstPackages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colPackage});
-            this.listFiles.Dock = System.Windows.Forms.DockStyle.Left;
-            this.listFiles.FullRowSelect = true;
-            this.listFiles.GridLines = true;
-            this.listFiles.HideSelection = false;
-            this.listFiles.Location = new System.Drawing.Point(3, 3);
-            this.listFiles.Name = "listFiles";
-            this.listFiles.Size = new System.Drawing.Size(213, 608);
-            this.listFiles.TabIndex = 32;
-            this.listFiles.UseCompatibleStateImageBehavior = false;
-            this.listFiles.View = System.Windows.Forms.View.Details;
+            this.lstPackages.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lstPackages.FullRowSelect = true;
+            this.lstPackages.GridLines = true;
+            this.lstPackages.HideSelection = false;
+            this.lstPackages.Location = new System.Drawing.Point(3, 3);
+            this.lstPackages.Name = "lstPackages";
+            this.lstPackages.Size = new System.Drawing.Size(213, 608);
+            this.lstPackages.TabIndex = 32;
+            this.lstPackages.UseCompatibleStateImageBehavior = false;
+            this.lstPackages.View = System.Windows.Forms.View.Details;
+            this.lstPackages.SelectedIndexChanged += new System.EventHandler(this.lstPackages_SelectedIndexChanged);
             // 
             // colPackage
             // 
@@ -616,14 +645,14 @@
             this.trvConflicts.Dock = System.Windows.Forms.DockStyle.Left;
             this.trvConflicts.Location = new System.Drawing.Point(3, 3);
             this.trvConflicts.Name = "trvConflicts";
-            treeNode4.Name = "nodePkg";
-            treeNode4.Text = "PkgMapTemplate";
-            treeNode5.Name = "nodePkg";
-            treeNode5.Text = "PkgCustomPerk1";
-            treeNode6.Name = "nodeFileName";
-            treeNode6.Text = "FileXY.gdt";
+            treeNode1.Name = "nodePkg";
+            treeNode1.Text = "PkgMapTemplate";
+            treeNode2.Name = "nodePkg";
+            treeNode2.Text = "PkgCustomPerk1";
+            treeNode3.Name = "nodeFileName";
+            treeNode3.Text = "FileXY.gdt";
             this.trvConflicts.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode6});
+            treeNode3});
             this.trvConflicts.Size = new System.Drawing.Size(481, 610);
             this.trvConflicts.TabIndex = 38;
             // 
@@ -658,27 +687,31 @@
             this.btnNewProjectFile.UseVisualStyleBackColor = true;
             this.btnNewProjectFile.Click += new System.EventHandler(this.btnNewProjectFile_Click);
             // 
-            // ctxCredits
+            // lblPackageHash
             // 
-            this.ctxCredits.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cmiAdd,
-            this.cmiRemove});
-            this.ctxCredits.Name = "ctxCredits";
-            this.ctxCredits.Size = new System.Drawing.Size(118, 48);
+            this.lblPackageHash.AutoSize = true;
+            this.lblPackageHash.Location = new System.Drawing.Point(599, 72);
+            this.lblPackageHash.Name = "lblPackageHash";
+            this.lblPackageHash.Size = new System.Drawing.Size(79, 13);
+            this.lblPackageHash.TabIndex = 53;
+            this.lblPackageHash.Text = "Package hash:";
             // 
-            // cmiAdd
+            // textBox7
             // 
-            this.cmiAdd.Name = "cmiAdd";
-            this.cmiAdd.Size = new System.Drawing.Size(117, 22);
-            this.cmiAdd.Text = "Add";
-            this.cmiAdd.Click += new System.EventHandler(this.cmiAdd_Click);
+            this.textBox7.Location = new System.Drawing.Point(687, 69);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.ReadOnly = true;
+            this.textBox7.Size = new System.Drawing.Size(456, 20);
+            this.textBox7.TabIndex = 52;
             // 
-            // cmiRemove
+            // grpPkgStatus
             // 
-            this.cmiRemove.Name = "cmiRemove";
-            this.cmiRemove.Size = new System.Drawing.Size(117, 22);
-            this.cmiRemove.Text = "Remove";
-            this.cmiRemove.Click += new System.EventHandler(this.cmiRemove_Click);
+            this.grpPkgStatus.Location = new System.Drawing.Point(1149, 17);
+            this.grpPkgStatus.Name = "grpPkgStatus";
+            this.grpPkgStatus.Size = new System.Drawing.Size(375, 100);
+            this.grpPkgStatus.TabIndex = 54;
+            this.grpPkgStatus.TabStop = false;
+            this.grpPkgStatus.Text = "Package status";
             // 
             // FrmMain
             // 
@@ -705,13 +738,13 @@
             this.tbContent.ResumeLayout(false);
             this.tbContent.PerformLayout();
             this.grpActions.ResumeLayout(false);
+            this.ctxCredits.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.tbConflicts.ResumeLayout(false);
             this.grpAutomatic.ResumeLayout(false);
             this.grpFileOp.ResumeLayout(false);
             this.grpFileOp.PerformLayout();
             this.panel1.ResumeLayout(false);
-            this.ctxCredits.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -734,7 +767,7 @@
         private System.Windows.Forms.TabControl tbcOperations;
         private System.Windows.Forms.TabPage tbContent;
         private System.Windows.Forms.TreeView trvFiles;
-        private System.Windows.Forms.ListView listFiles;
+        private System.Windows.Forms.ListView lstPackages;
         private System.Windows.Forms.ColumnHeader colPackage;
         private System.Windows.Forms.TabPage tbConflicts;
         private System.Windows.Forms.Panel panel1;
@@ -776,6 +809,9 @@
         private System.Windows.Forms.ContextMenuStrip ctxCredits;
         private System.Windows.Forms.ToolStripMenuItem cmiAdd;
         private System.Windows.Forms.ToolStripMenuItem cmiRemove;
+        private System.Windows.Forms.Label lblPackageHash;
+        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.GroupBox grpPkgStatus;
     }
 }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LiteDB;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -27,7 +28,7 @@ namespace ContentManager
 
         #region Private vars
 
-        private Dictionary<string, byte[]> PackageFileHashes;
+        private LiteDatabase db;
 
         #endregion
 
@@ -36,7 +37,88 @@ namespace ContentManager
         public FrmMain()
         {
             InitializeComponent();
+
+            this.trvFiles.PathSeparator = @"\";
+
+            // Load database or create if it doesnt exist
+            this.db = new LiteDatabase("./Package.db");
+
+            // Load all packages from db
+            this.loadPackages();
+
         }
+
+        #endregion
+
+        #region Private methods
+
+        private void loadPackages()
+        {
+            // Get Packages
+            var col = db.GetCollection<Package>("Package");
+            
+            // Check if db has packages
+            if(col.Count() <= 0)
+            {
+                return;
+            }
+            
+            var results = col.FindAll().ToList();
+
+            foreach(Package pkg in results)
+            {
+                ListViewItem item = new ListViewItem(pkg.Name);
+                item.Tag = pkg;
+
+                this.lstPackages.Items.Add(item);
+
+            }
+
+        }
+
+        private void loadFilesBySelectedPackage(Package pkg)
+        {
+
+            var col = db.GetCollection<PackageFile>("PackageFile");
+
+            // Check if db has packages
+            if (col.Count() <= 0)
+            {
+                return;
+            }
+
+            var results = col.Query().Where(x => x.PackageId == pkg.Id).OrderBy(x => x.RelPath).ToList();
+
+            TreeNode lastNode = null;
+            string subPathAgg;
+            foreach (PackageFile file in results)
+            {
+                subPathAgg = string.Empty;
+                foreach (string subPath in file.RelPath.Split('\\'))
+                {
+
+                    subPathAgg += subPath + '\\';
+                    TreeNode[] nodes = this.trvFiles.Nodes.Find(subPathAgg, true);
+
+                    if (nodes.Length == 0)
+                    {
+                        if (lastNode == null)
+                        {
+                            lastNode = this.trvFiles.Nodes.Add(subPathAgg, subPath);
+                        }
+                        else
+                        {
+                            lastNode = lastNode.Nodes.Add(subPathAgg, subPath);
+                        }
+                    }
+                    else
+                    {
+                        lastNode = nodes[0];
+                    }
+                }
+            }
+        }
+
 
         #endregion
 
@@ -104,16 +186,23 @@ namespace ContentManager
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            if (this.state == FormState.Ready)
+            if (this.state == FormState.Ready || true /*tmp*/)
             {
                 using (FrmInput input = new FrmInput())
                 {
                     DialogResult res = input.ShowDialog(this);
-                    if (res == DialogResult.Yes && input.Input != string.Empty)
+                    if (res == DialogResult.Yes && input.InputText != string.Empty)
                     {
                         // TODO: Create new package
+                        Package newPkg = new Package();
+                        newPkg.Name = input.InputText;
+                        newPkg.Path = string.Empty;
 
 
+                        var col = db.GetCollection<Package>("Package");
+                        col.Insert(newPkg);
+
+                        this.loadPackages();
                     }
                 }
             }
@@ -174,6 +263,23 @@ namespace ContentManager
 
             }
         }
+
+        private void lstPackages_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (sender == null)
+            {
+                return;
+            }
+
+            ListViewItem item = (ListViewItem)sender;
+
+            if(item != null)
+            {
+                this.loadFilesBySelectedPackage((Package)item.Tag);
+            }
+
+        }
+
 
         #endregion
 

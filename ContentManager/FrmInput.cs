@@ -18,7 +18,7 @@ namespace ContentManager
             this.DialogResult = DialogResult.None;
         }
 
-        public string Input
+        public string InputText
         {
             get { return this.txtName.Text; }
         }

@@ -38,37 +38,35 @@ namespace ContentManager
 
     public struct PackageFile
     {
-        public string RelPath;
+        public string RelPath { get; set; }
 
-        public bool UseFile;
+        public bool UseFile { get; set; }
 
-        public byte[] Sha256Hash;
+        public byte[] Sha256Hash { get; set; }
 
-        public Guid UniqueID;
+        public int Id { get; set; }
+
+        public string PackageId { get; set; }
     }
 
     public struct Package
     {
-        public string Name;
+        public string Name { get; set; }
 
-        public string Path;
+        public string Path { get; set; }
 
-        public List<string> Credits;
+        public string[] Credits { get; set; }
 
-        public string ID;
-
-        public List<PackageFile> Files; 
+        public string Id { get; set; }
 
     }
 
     public class ProjectConfig
     {
-
         public string StoragePath { get; set; }
 
         public string RootPath { get; set; }
 
         public string BackupPath { get; set; }
-
     }
 }
