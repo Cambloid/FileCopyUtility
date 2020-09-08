@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LiteDB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,9 +45,9 @@ namespace ContentManager
 
         public byte[] Sha256Hash { get; set; }
 
-        public int Id { get; set; }
-
         public string PackageId { get; set; }
+
+        public Package Pkg { get; set; }
     }
 
     public struct Package
@@ -56,8 +57,6 @@ namespace ContentManager
         public string Path { get; set; }
 
         public string[] Credits { get; set; }
-
-        public string Id { get; set; }
 
     }
 

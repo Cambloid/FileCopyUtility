@@ -1,11 +1,15 @@
-﻿using LiteDB;
+﻿using Base;
+using LiteDB;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -40,17 +44,117 @@ namespace ContentManager
 
             this.trvFiles.PathSeparator = @"\";
 
-            // Load database or create if it doesnt exist
-            this.db = new LiteDatabase("./Package.db");
+            this.fillPathFields();
+            this.updateStatus();
 
-            // Load all packages from db
-            this.loadPackages();
+            if(this.state == FormState.Ready)
+            {
+                // Load database or create if it doesnt exist
+                this.setDatabase();
 
+                // Load all packages from db
+                this.loadPackages();
+            }
         }
 
         #endregion
 
         #region Private methods
+
+        private void importPkgZip(string file)
+        {
+            // should be async
+
+        }
+
+        private void setFieldsByStatus()
+        {
+            // pkg actions
+            this.btnCreate.Enabled = this.state == FormState.Ready;
+            this.btnImport.Enabled = this.state == FormState.Ready;
+            this.btnRemove.Enabled = this.state == FormState.Ready;
+
+            // Pkg info
+            this.lstPackages.Enabled = this.state == FormState.Ready;
+            this.trvFiles.Enabled = this.state == FormState.Ready;
+            this.txtPkgPath.Enabled = this.state == FormState.Ready;
+            this.txtPkgName.Enabled = this.state == FormState.Ready;
+            this.btnBrowsePkg.Enabled = this.state == FormState.Ready;
+            this.lstCredits.Enabled = this.state == FormState.Ready;
+
+            // Pkg ops
+            this.btnRefresh.Enabled = this.state == FormState.Ready;
+            this.btnRemovePkg.Enabled = this.state == FormState.Ready;
+            this.btnInstallPkg.Enabled = this.state == FormState.Ready;
+
+        }
+
+        private void fillPathFields()
+        {
+            string dbPath = Properties.Settings.Default.DbPath;
+            string gameRoot = Properties.Settings.Default.GameRoot;
+            string storage = Properties.Settings.Default.StoragePath;
+            string backup = Properties.Settings.Default.BackupPath;
+
+
+            this.txtDbFile.Text = dbPath;
+            this.txtGameRoot.Text = gameRoot;
+            this.txtStoragePath.Text = storage;
+            this.txtBackupDir.Text = backup;
+
+
+        }
+
+        private void updateStatus()
+        {
+            // Update app status
+            this.state = FormState.Ready;
+
+            string dbPath   = Properties.Settings.Default.DbPath;
+            string gameRoot = Properties.Settings.Default.GameRoot;
+            string storage  = Properties.Settings.Default.StoragePath;
+            string backup   = Properties.Settings.Default.BackupPath;
+
+            if(dbPath == string.Empty)
+            {
+                this.state = FormState.NotReady;
+            }
+
+            if(!Directory.Exists(gameRoot) && Utility.IsGameRootFolderValid(gameRoot))
+            {
+                this.state = FormState.NotReady;
+            }
+
+            if(!Directory.Exists(storage))
+            {
+                this.state = FormState.NotReady;
+            }
+
+            if(backup == string.Empty)
+            {
+                // Autofill backup dir
+                string defPath = ".\\Backup";
+
+                Properties.Settings.Default.BackupPath = defPath;
+                Properties.Settings.Default.Save();
+
+                this.txtBackupDir.Text = defPath;
+            }
+
+            this.setFieldsByStatus();
+        }
+
+        private void setDatabase()
+        {
+            if (this.state != FormState.Ready)
+            {
+                return;
+            }
+
+            string dbPath = Properties.Settings.Default.DbPath;
+            this.db = new LiteDatabase(dbPath);
+
+        }
 
         private void loadPackages()
         {
@@ -78,7 +182,6 @@ namespace ContentManager
 
         private void loadFilesBySelectedPackage(Package pkg)
         {
-
             var col = db.GetCollection<PackageFile>("PackageFile");
 
             // Check if db has packages
@@ -87,7 +190,7 @@ namespace ContentManager
                 return;
             }
 
-            var results = col.Query().Where(x => x.PackageId == pkg.Id).OrderBy(x => x.RelPath).ToList();
+            var results = col.Query().Where(x => x.Pkg.Name == pkg.Name).OrderBy(x => x.RelPath).ToList();
 
             TreeNode lastNode = null;
             string subPathAgg;
@@ -119,100 +222,123 @@ namespace ContentManager
             }
         }
 
-
         #endregion
 
         #region Events
 
         private void btnNewProjectFile_Click(object sender, EventArgs e)
         {
-            using (SaveFileDialog dlg = new SaveFileDialog())
+            string file = Utility.PickFolder();
+            if (file != string.Empty)
             {
-                DialogResult res = dlg.ShowDialog(this);
-                if(res == DialogResult.OK)
-                {
-                    this.txtProjectFile.Text = dlg.FileName;
-                }
+
+                this.txtDbFile.Text = file;
+                Properties.Settings.Default.DbPath = file;
+                Properties.Settings.Default.Save();
+
+                this.updateStatus();
+                this.setDatabase();
             }
         }
 
-        private void btnBrowsePrjFile_Click(object sender, EventArgs e)
+        private void btnBrowseDbFile_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog dlg = new OpenFileDialog())
+            string file = Utility.PickFile();
+
+            if (file != string.Empty)
             {
-                DialogResult res = dlg.ShowDialog(this);
-                if (res == DialogResult.OK)
-                {
-                    this.txtProjectFile.Text = dlg.FileName;
-                }
+                this.txtDbFile.Text = file;
+                Properties.Settings.Default.DbPath = file;
+                Properties.Settings.Default.Save();
+
+                this.updateStatus();
+                this.setDatabase();
             }
+
         }
 
         private void btnBrowseGameRoot_Click(object sender, EventArgs e)
         {
-            using (FolderBrowserDialog dlg = new FolderBrowserDialog())
+            string folder = Utility.PickFolder();
+
+            if (folder != string.Empty)
             {
-                DialogResult res = dlg.ShowDialog(this);
-                if (res == DialogResult.OK)
-                {
-                    this.txtGameRoot.Text = dlg.SelectedPath;
-                }
+                this.txtGameRoot.Text = folder;
+                Properties.Settings.Default.GameRoot = folder;
+                Properties.Settings.Default.Save();
+
+                this.updateStatus();
             }
+
         }
 
         private void btnBrowseStorage_Click(object sender, EventArgs e)
         {
-            using (FolderBrowserDialog dlg = new FolderBrowserDialog())
+            string folder = Utility.PickFolder();
+
+            if (folder != string.Empty)
             {
-                DialogResult res = dlg.ShowDialog(this);
-                if (res == DialogResult.OK)
-                {
-                    this.txtStoragePath.Text = dlg.SelectedPath;
-                }
+                this.txtStoragePath.Text = folder;
+                Properties.Settings.Default.StoragePath = folder;
+                Properties.Settings.Default.Save();
+
+                this.updateStatus();
             }
+
         }
 
         private void btnBackupDir_Click(object sender, EventArgs e)
         {
-            using (FolderBrowserDialog dlg = new FolderBrowserDialog())
+            string folder = Utility.PickFolder();
+
+            if (folder != string.Empty)
             {
-                DialogResult res = dlg.ShowDialog(this);
-                if (res == DialogResult.OK)
-                {
-                    this.txtBackupDir.Text = dlg.SelectedPath;
-                }
+                this.txtBackupDir.Text = folder;
+                Properties.Settings.Default.BackupPath = folder;
+                Properties.Settings.Default.Save();
+
+                this.updateStatus();
             }
+
         }
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            if (this.state == FormState.Ready || true /*tmp*/)
+            if (this.state != FormState.Ready)
             {
-                using (FrmInput input = new FrmInput())
+                return;
+            }
+
+            using (FrmInput input = new FrmInput())
+            {
+                DialogResult res = input.ShowDialog(this);
+                if (res == DialogResult.Yes && input.InputText != string.Empty)
                 {
-                    DialogResult res = input.ShowDialog(this);
-                    if (res == DialogResult.Yes && input.InputText != string.Empty)
-                    {
-                        // TODO: Create new package
-                        Package newPkg = new Package();
-                        newPkg.Name = input.InputText;
-                        newPkg.Path = string.Empty;
+                    // TODO: Create new package
+                    Package newPkg = new Package();
+                    newPkg.Name = input.InputText;
+                    newPkg.Path = string.Empty;
 
 
-                        var col = db.GetCollection<Package>("Package");
-                        col.Insert(newPkg);
+                    var col = db.GetCollection<Package>("Package");
+                    col.Insert(newPkg);
 
-                        this.loadPackages();
-                    }
+                    this.loadPackages();
                 }
             }
         }
 
         private void btnImport_Click(object sender, EventArgs e)
         {
-            if (this.state == FormState.Ready)
+            if (this.state != FormState.Ready)
             {
+                return;
+            }
+            string file = Utility.PickFile();
 
+            if (file != string.Empty)
+            {
+                this.importPkgZip(file);
             }
         }
 
@@ -266,12 +392,12 @@ namespace ContentManager
 
         private void lstPackages_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (sender == null)
+            if (this.lstPackages.SelectedItems.Count <= 0)
             {
                 return;
             }
 
-            ListViewItem item = (ListViewItem)sender;
+            ListViewItem item = (ListViewItem)this.lstPackages.SelectedItems[0];
 
             if(item != null)
             {
