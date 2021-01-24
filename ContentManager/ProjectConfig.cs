@@ -37,21 +37,21 @@ namespace ContentManager
         public ConflictResolve Solution;
     }
 
-    public struct PackageFile
+    public class PackageFile
     {
+        public int FileId { get; set; }
+
         public string RelPath { get; set; }
 
-        public bool UseFile { get; set; }
+        public string Sha256Hash { get; set; }
 
-        public byte[] Sha256Hash { get; set; }
-
-        public string PackageId { get; set; }
-
-        public Package Pkg { get; set; }
+        public int PackageFK { get; set; }
     }
 
-    public struct Package
+    public class Package
     {
+        public int PkgId { get; set; }
+
         public string Name { get; set; }
 
         public string Path { get; set; }

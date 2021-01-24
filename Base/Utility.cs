@@ -63,6 +63,23 @@ namespace Base
             return path;
         }
 
+        public static string SaveFile(string filter)
+        {
+            string path = string.Empty;
+            using (SaveFileDialog dlg = new SaveFileDialog())
+            {
+                dlg.Filter = filter;
+
+                DialogResult res = dlg.ShowDialog();
+                if (res == DialogResult.OK)
+                {
+                    path = dlg.FileName;
+                }
+            }
+            return path;
+        }
+
+
         public static string PickFolder()
         {
             string path = string.Empty;

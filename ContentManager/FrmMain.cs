@@ -1,6 +1,7 @@
 ﻿using Base;
 using LiteDB;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,7 +11,9 @@ using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Messaging;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -47,7 +50,7 @@ namespace ContentManager
             this.fillPathFields();
             this.updateStatus();
 
-            if(this.state == FormState.Ready)
+            if (this.state == FormState.Ready)
             {
                 // Load database or create if it doesnt exist
                 this.setDatabase();
@@ -61,10 +64,80 @@ namespace ContentManager
 
         #region Private methods
 
-        private void importPkgZip(string file)
+        private void importPkgDir(string dir, string pkgName)
         {
-            // should be async
+            try
+            {
 
+                if (!Directory.Exists(dir))
+                {
+                    return;
+                }
+
+
+                string[] files = Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories);
+                ConcurrentDictionary<string, string> fileHashes = new ConcurrentDictionary<string, string>();
+
+                Parallel.For(0, files.Length,
+                       index =>
+                       {
+                           FileInfo fi = new FileInfo(files[index]);
+                           using (FileStream stream = File.OpenRead(files[index]))
+                           {
+                               var sha = new SHA256Managed();
+                               byte[] checksum = sha.ComputeHash(stream);
+
+                               fileHashes.TryAdd(BitConverter.ToString(checksum).Replace("-", String.Empty), files[index]);
+
+                           }
+                       });
+
+
+                var packages = db.GetCollection<Package>("Package_Table");
+                int nextId = packages.Count();
+
+                if (files.Count() != fileHashes.Count())
+                {
+                    return;
+                }
+
+
+                Package pkg = new Package();
+                pkg.PkgId = nextId;
+                packages.Insert(pkg);
+
+
+                var col = db.GetCollection<PackageFile>("PackageFile_Table");
+                
+
+
+                for (int i = 0; i < fileHashes.Count(); i++)
+                {
+                    PackageFile pkgFile = new PackageFile();
+
+                    pkgFile.FileId = col.Count();
+                    pkgFile.Sha256Hash = fileHashes.ElementAt(i).Key;
+                    pkgFile.RelPath = fileHashes.ElementAt(i).Value;
+                    pkgFile.PackageFK = nextId;
+
+                    
+
+                    col.Insert(pkgFile);
+                }
+
+
+
+
+                // 2. iterate through each file and generate hash and add to database
+                // 3. add info like path, name, hash of each file in db
+
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         private void setFieldsByStatus()
@@ -141,6 +214,7 @@ namespace ContentManager
                 this.txtBackupDir.Text = defPath;
             }
 
+
             this.setFieldsByStatus();
         }
 
@@ -151,15 +225,29 @@ namespace ContentManager
                 return;
             }
 
-            string dbPath = Properties.Settings.Default.DbPath;
-            this.db = new LiteDatabase(dbPath);
+            try
+            {
+
+                string dbPath = Properties.Settings.Default.DbPath;
+                this.db = new LiteDatabase(dbPath);
+
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+
+                Properties.Settings.Default.DbPath = string.Empty;
+                Properties.Settings.Default.Save();
+
+            }
+
+            
 
         }
 
         private void loadPackages()
         {
             // Get Packages
-            var col = db.GetCollection<Package>("Package");
+            var col = db.GetCollection<Package>("Package_Table");
             
             // Check if db has packages
             if(col.Count() <= 0)
@@ -190,7 +278,7 @@ namespace ContentManager
                 return;
             }
 
-            var results = col.Query().Where(x => x.Pkg.Name == pkg.Name).OrderBy(x => x.RelPath).ToList();
+            var results = col.Query().Where(x => x.PackageFK == pkg.PkgId).OrderBy(x => x.RelPath).ToList();
 
             TreeNode lastNode = null;
             string subPathAgg;
@@ -228,7 +316,7 @@ namespace ContentManager
 
         private void btnNewProjectFile_Click(object sender, EventArgs e)
         {
-            string file = Utility.PickFolder();
+            string file = Utility.SaveFile("Database (*.db)|*.db");
             if (file != string.Empty)
             {
 
@@ -334,11 +422,28 @@ namespace ContentManager
             {
                 return;
             }
-            string file = Utility.PickFile();
 
-            if (file != string.Empty)
+            string folder = Utility.PickFolder();
+            if(folder == string.Empty)
             {
-                this.importPkgZip(file);
+                return;
+            }
+
+            var info = new FileInfo(folder);
+            string name = info.Name;
+
+            using (FrmInput pkgName = new FrmInput())
+            {
+                pkgName.ShowDialog(this);
+                if (pkgName.DialogResult == DialogResult.Yes)
+                {
+                    name = pkgName.InputText;
+                }
+            }
+
+            if (folder != string.Empty)
+            {
+                this.importPkgDir(folder, name);
             }
         }
 
