@@ -21,6 +21,7 @@ namespace ContentManager
 {
     public partial class FrmMain : Form
     {
+
         #region Enums
 
         private enum FormState
@@ -30,12 +31,6 @@ namespace ContentManager
         }
 
         private FormState state = FormState.NotReady;
-
-        #endregion
-
-        #region Private vars
-
-        private LiteDatabase db;
 
         #endregion
 
@@ -57,6 +52,8 @@ namespace ContentManager
 
                 // Load all packages from db
                 this.loadPackages();
+
+
             }
         }
 
@@ -93,39 +90,44 @@ namespace ContentManager
                        });
 
 
-                var packages = db.GetCollection<Package>("Package_Table");
-                int nextId = packages.Count();
-
-                if (files.Count() != fileHashes.Count())
+                using (var db = new LiteDatabase(Properties.Settings.Default.DbPath))
                 {
-                    return;
+
+                    var packages = db.GetCollection<Package>("Package_Table");
+                    int nextId = packages.Count();
+
+                    if (files.Count() != fileHashes.Count())
+                    {
+                        return;
+                    }
+
+                    Package pkg = new Package();
+                    pkg.PkgId   = nextId;
+                    pkg.Name    = pkgName;
+                    pkg.Path    = dir;
+                    pkg.Credits = new string[] { "" };
+
+                    packages.Insert(pkg);
+
+
+                    var col = db.GetCollection<PackageFile>("PackageFile_Table");
+
+
+
+                    for (int i = 0; i < fileHashes.Count(); i++)
+                    {
+                        PackageFile pkgFile = new PackageFile();
+
+                        pkgFile.FileId = col.Count();
+                        pkgFile.Sha256Hash = fileHashes.ElementAt(i).Key;
+                        pkgFile.RelPath = fileHashes.ElementAt(i).Value;
+                        pkgFile.PackageFK = nextId;
+
+                        col.Insert(pkgFile);
+                    }
+
+
                 }
-
-
-                Package pkg = new Package();
-                pkg.PkgId = nextId;
-                packages.Insert(pkg);
-
-
-                var col = db.GetCollection<PackageFile>("PackageFile_Table");
-                
-
-
-                for (int i = 0; i < fileHashes.Count(); i++)
-                {
-                    PackageFile pkgFile = new PackageFile();
-
-                    pkgFile.FileId = col.Count();
-                    pkgFile.Sha256Hash = fileHashes.ElementAt(i).Key;
-                    pkgFile.RelPath = fileHashes.ElementAt(i).Value;
-                    pkgFile.PackageFK = nextId;
-
-                    
-
-                    col.Insert(pkgFile);
-                }
-
-
 
 
                 // 2. iterate through each file and generate hash and add to database
@@ -214,22 +216,28 @@ namespace ContentManager
                 this.txtBackupDir.Text = defPath;
             }
 
-
             this.setFieldsByStatus();
         }
 
-        private void setDatabase()
+        private bool setDatabase()
         {
+
             if (this.state != FormState.Ready)
             {
-                return;
+                return false;
             }
 
             try
             {
-
                 string dbPath = Properties.Settings.Default.DbPath;
-                this.db = new LiteDatabase(dbPath);
+
+               if(!File.Exists(dbPath))
+                {
+                    return false;
+                }
+                
+
+                return true;
 
             } catch (Exception ex)
             {
@@ -240,74 +248,115 @@ namespace ContentManager
 
             }
 
-            
 
+            return false;
         }
 
         private void loadPackages()
         {
-            // Get Packages
-            var col = db.GetCollection<Package>("Package_Table");
-            
-            // Check if db has packages
-            if(col.Count() <= 0)
+            this.lstPackages.Items.Clear();
+
+            using (var db = new LiteDatabase(Properties.Settings.Default.DbPath))
             {
-                return;
+                // Get Packages
+                var col = db.GetCollection<Package>("Package_Table");
+
+
+                // Check if db has packages
+                if (col.Count() <= 0)
+                {
+                    return;
+                }
+
+                var results = col.FindAll();
+
+                foreach (Package pkg in results)
+                {
+                    ListViewItem item = new ListViewItem(pkg.Name);
+                    item.Tag = pkg;
+
+                    this.lstPackages.Items.Add(item);
+                }
             }
-            
-            var results = col.FindAll().ToList();
-
-            foreach(Package pkg in results)
-            {
-                ListViewItem item = new ListViewItem(pkg.Name);
-                item.Tag = pkg;
-
-                this.lstPackages.Items.Add(item);
-
-            }
-
         }
 
         private void loadFilesBySelectedPackage(Package pkg)
         {
-            var col = db.GetCollection<PackageFile>("PackageFile");
+            this.trvFiles.Nodes.Clear();
 
-            // Check if db has packages
-            if (col.Count() <= 0)
+            using (var db = new LiteDatabase(Properties.Settings.Default.DbPath))
             {
-                return;
-            }
+                var col = db.GetCollection<PackageFile>("PackageFile_Table");
 
-            var results = col.Query().Where(x => x.PackageFK == pkg.PkgId).OrderBy(x => x.RelPath).ToList();
-
-            TreeNode lastNode = null;
-            string subPathAgg;
-            foreach (PackageFile file in results)
-            {
-                subPathAgg = string.Empty;
-                foreach (string subPath in file.RelPath.Split('\\'))
+                // Check if db has packages
+                if (col.Count() <= 0)
                 {
+                    return;
+                }
 
-                    subPathAgg += subPath + '\\';
-                    TreeNode[] nodes = this.trvFiles.Nodes.Find(subPathAgg, true);
+                var results = col.Query().Where(x => x.PackageFK == pkg.PkgId).OrderBy(x => x.RelPath).ToList();
 
-                    if (nodes.Length == 0)
+                TreeNode lastNode = null;
+                string subPathAgg;
+                foreach (PackageFile file in results)
+                {
+                    subPathAgg = string.Empty;
+                    foreach (string subPath in file.RelPath.Split('\\'))
                     {
-                        if (lastNode == null)
+
+                        subPathAgg += subPath + '\\';
+                        TreeNode[] nodes = this.trvFiles.Nodes.Find(subPathAgg, true);
+
+                        if (nodes.Length == 0)
                         {
-                            lastNode = this.trvFiles.Nodes.Add(subPathAgg, subPath);
+                            if (lastNode == null)
+                            {
+                                lastNode = this.trvFiles.Nodes.Add(subPathAgg, subPath);
+                            }
+                            else
+                            {
+                                lastNode = lastNode.Nodes.Add(subPathAgg, subPath);
+                            }
                         }
                         else
                         {
-                            lastNode = lastNode.Nodes.Add(subPathAgg, subPath);
+                            lastNode = nodes[0];
                         }
-                    }
-                    else
-                    {
-                        lastNode = nodes[0];
                     }
                 }
             }
+        }
+
+        private void removeFilesByPackageId(int packageId)
+        {
+            using (LiteDatabase db = new LiteDatabase(Properties.Settings.Default.DbPath))
+            {
+                var col = db.GetCollection<PackageFile>("PackageFile_Table");
+                col.DeleteMany(x => x.PackageFK == packageId);
+            }
+        }
+
+        private void removePackageById(int packageId)
+        {
+            using (LiteDatabase db = new LiteDatabase(Properties.Settings.Default.DbPath))
+            {
+                var col = db.GetCollection<Package>("Package_Table");
+                col.DeleteMany(x => x.PkgId == packageId);
+            }
+        }
+
+        private void selectFirstPackage()
+        {
+            if (this.lstPackages.Items.Count <= 0)
+            {
+                this.trvFiles.Nodes.Clear();
+            }
+            else
+            {
+                Package pkg = (Package)this.lstPackages.Items[0].Tag;
+                this.loadFilesBySelectedPackage(pkg);
+            }
+
         }
 
         #endregion
@@ -407,9 +456,11 @@ namespace ContentManager
                     newPkg.Name = input.InputText;
                     newPkg.Path = string.Empty;
 
-
-                    var col = db.GetCollection<Package>("Package");
-                    col.Insert(newPkg);
+                    using (var db = new LiteDatabase(Properties.Settings.Default.DbPath))
+                    {
+                        var col = db.GetCollection<Package>("Package");
+                        col.Insert(newPkg);
+                    }
 
                     this.loadPackages();
                 }
@@ -444,6 +495,8 @@ namespace ContentManager
             if (folder != string.Empty)
             {
                 this.importPkgDir(folder, name);
+                this.loadPackages();
+                this.selectFirstPackage();
             }
         }
 
@@ -451,27 +504,47 @@ namespace ContentManager
         {
             if (this.state == FormState.Ready)
             {
+                if(this.lstPackages.SelectedItems.Count > 0 )
+                {
+                    try
+                    {
+                        Package pkg = (Package)this.lstPackages.SelectedItems[0].Tag;
+
+                        this.removeFilesByPackageId(pkg.PkgId);
+
+                        this.removePackageById(pkg.PkgId);
+
+                        this.loadPackages();
+
+
+
+                        this.selectFirstPackage();
+
+                        
+
+                    } catch (Exception ex )
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
+                                  
+
+                }
+
 
             }
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
+            this.updateStatus();
+
             if (this.state == FormState.Ready)
             {
-
+                this.loadPackages();
             }
         }
 
         private void btnInstallPkg_Click(object sender, EventArgs e)
-        {
-            if (this.state == FormState.Ready)
-            {
-
-            }
-        }
-
-        private void btnRemovePkg_Click(object sender, EventArgs e)
         {
             if (this.state == FormState.Ready)
             {
@@ -510,7 +583,6 @@ namespace ContentManager
             }
 
         }
-
 
         #endregion
 

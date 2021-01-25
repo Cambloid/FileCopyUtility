@@ -73,8 +73,7 @@ namespace ContentManager
                 //    );
             } catch(Exception ex)
             {
-
-
+                Console.WriteLine(ex.ToString());
             }
         }
 

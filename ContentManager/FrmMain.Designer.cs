@@ -335,7 +335,6 @@
             this.btnRemovePkg.TabIndex = 45;
             this.btnRemovePkg.Text = "Remove Package";
             this.btnRemovePkg.UseVisualStyleBackColor = true;
-            this.btnRemovePkg.Click += new System.EventHandler(this.btnRemovePkg_Click);
             // 
             // btnInstallPkg
             // 
