@@ -79,6 +79,13 @@ namespace Base
             return path;
         }
 
+        public static string StringDelta(string str1, string str2)
+        {
+            string bigger  = str1.Length > str2.Length ? str1 : str2;
+            string smaller = str1.Length > str2.Length ? str2 : str1;
+
+            return bigger.Substring(0, smaller.Length);
+        }
 
         public static string PickFolder()
         {

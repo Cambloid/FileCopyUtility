@@ -34,6 +34,12 @@ namespace ContentManager
 
         #endregion
 
+        #region Private Vars
+
+
+
+        #endregion
+
         #region Construktor
 
         public FrmMain()
@@ -61,18 +67,18 @@ namespace ContentManager
 
         #region Private methods
 
-        private void importPkgDir(string dir, string pkgName)
+        private void importPkgDir(string pkgDir, string pkgName)
         {
             try
             {
 
-                if (!Directory.Exists(dir))
+                if (!Directory.Exists(pkgDir))
                 {
                     return;
                 }
 
 
-                string[] files = Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories);
+                string[] files = Directory.GetFiles(pkgDir, "*.*", SearchOption.AllDirectories);
                 ConcurrentDictionary<string, string> fileHashes = new ConcurrentDictionary<string, string>();
 
                 Parallel.For(0, files.Length,
@@ -104,7 +110,7 @@ namespace ContentManager
                     Package pkg = new Package();
                     pkg.PkgId   = nextId;
                     pkg.Name    = pkgName;
-                    pkg.Path    = dir;
+                    pkg.Path    = pkgDir;
                     pkg.Credits = new string[] { "" };
 
                     packages.Insert(pkg);
@@ -120,7 +126,7 @@ namespace ContentManager
 
                         pkgFile.FileId = col.Count();
                         pkgFile.Sha256Hash = fileHashes.ElementAt(i).Key;
-                        pkgFile.RelPath = fileHashes.ElementAt(i).Value;
+                        pkgFile.RelPath = Utility.StringDelta(pkgDir, fileHashes.ElementAt(i).Value);
                         pkgFile.PackageFK = nextId;
 
                         col.Insert(pkgFile);
@@ -301,6 +307,7 @@ namespace ContentManager
                 foreach (PackageFile file in results)
                 {
                     subPathAgg = string.Empty;
+                    
                     foreach (string subPath in file.RelPath.Split('\\'))
                     {
 
@@ -456,6 +463,8 @@ namespace ContentManager
                     newPkg.Name = input.InputText;
                     newPkg.Path = string.Empty;
 
+
+
                     using (var db = new LiteDatabase(Properties.Settings.Default.DbPath))
                     {
                         var col = db.GetCollection<Package>("Package");
@@ -516,11 +525,7 @@ namespace ContentManager
 
                         this.loadPackages();
 
-
-
                         this.selectFirstPackage();
-
-                        
 
                     } catch (Exception ex )
                     {
