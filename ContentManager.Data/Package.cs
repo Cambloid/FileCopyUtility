@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,17 +13,26 @@ namespace ContentManager.Data
         public Package(string pkgName, int id)
         {
             this.PkgId = id;
-
             this.Name = pkgName;
+
+            this.FileCollection = new List<PackageFile>();
+            this.Path = string.Empty;
+            this.Credits = new string[] { };
+
         }
 
         public int PkgId { get; set; }
+
+        public long ByteSize { get; set; }
 
         public string Name { get; set; }
 
         public string Path { get; set; }
 
         public string[] Credits { get; set; }
+
+        [JsonProperty("Files")]
+        public List<PackageFile> FileCollection { get; set; }
     }
 
     public class PackageException : Exception

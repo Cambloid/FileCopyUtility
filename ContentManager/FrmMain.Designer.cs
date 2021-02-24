@@ -45,7 +45,7 @@
             this.btnBrowseGameRoot = new System.Windows.Forms.Button();
             this.btnBrowseDbFile = new System.Windows.Forms.Button();
             this.txtGameRoot = new System.Windows.Forms.TextBox();
-            this.txtDbFile = new System.Windows.Forms.TextBox();
+            this.txtProjectRoot = new System.Windows.Forms.TextBox();
             this.tbcOperations = new System.Windows.Forms.TabControl();
             this.tbContent = new System.Windows.Forms.TabPage();
             this.btnBrowsePkg = new System.Windows.Forms.Button();
@@ -94,7 +94,6 @@
             this.trvConflicts = new System.Windows.Forms.TreeView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnExec = new System.Windows.Forms.Button();
-            this.btnNewProjectFile = new System.Windows.Forms.Button();
             this.tbcOperations.SuspendLayout();
             this.tbContent.SuspendLayout();
             this.grpActions.SuspendLayout();
@@ -139,11 +138,11 @@
             // lblDbFile
             // 
             this.lblDbFile.AutoSize = true;
-            this.lblDbFile.Location = new System.Drawing.Point(10, 10);
+            this.lblDbFile.Location = new System.Drawing.Point(18, 10);
             this.lblDbFile.Name = "lblDbFile";
-            this.lblDbFile.Size = new System.Drawing.Size(69, 13);
+            this.lblDbFile.Size = new System.Drawing.Size(61, 13);
             this.lblDbFile.TabIndex = 25;
-            this.lblDbFile.Text = "Database file";
+            this.lblDbFile.Text = "Project root";
             // 
             // btnBrowseStorage
             // 
@@ -216,15 +215,15 @@
             this.txtGameRoot.Size = new System.Drawing.Size(1409, 20);
             this.txtGameRoot.TabIndex = 18;
             // 
-            // txtDbFile
+            // txtProjectRoot
             // 
-            this.txtDbFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtProjectRoot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtDbFile.Location = new System.Drawing.Point(85, 6);
-            this.txtDbFile.Name = "txtDbFile";
-            this.txtDbFile.ReadOnly = true;
-            this.txtDbFile.Size = new System.Drawing.Size(1374, 20);
-            this.txtDbFile.TabIndex = 17;
+            this.txtProjectRoot.Location = new System.Drawing.Point(85, 6);
+            this.txtProjectRoot.Name = "txtProjectRoot";
+            this.txtProjectRoot.ReadOnly = true;
+            this.txtProjectRoot.Size = new System.Drawing.Size(1409, 20);
+            this.txtProjectRoot.TabIndex = 17;
             // 
             // tbcOperations
             // 
@@ -712,23 +711,11 @@
             this.btnExec.Text = "Save";
             this.btnExec.UseVisualStyleBackColor = true;
             // 
-            // btnNewProjectFile
-            // 
-            this.btnNewProjectFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnNewProjectFile.Location = new System.Drawing.Point(1465, 6);
-            this.btnNewProjectFile.Name = "btnNewProjectFile";
-            this.btnNewProjectFile.Size = new System.Drawing.Size(29, 20);
-            this.btnNewProjectFile.TabIndex = 33;
-            this.btnNewProjectFile.Text = "+";
-            this.btnNewProjectFile.UseVisualStyleBackColor = true;
-            this.btnNewProjectFile.Click += new System.EventHandler(this.btnNewProjectFile_Click);
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1566, 793);
-            this.Controls.Add(this.btnNewProjectFile);
             this.Controls.Add(this.tbcOperations);
             this.Controls.Add(this.lblBackupFolder);
             this.Controls.Add(this.btnBackupDir);
@@ -741,7 +728,7 @@
             this.Controls.Add(this.btnBrowseGameRoot);
             this.Controls.Add(this.btnBrowseDbFile);
             this.Controls.Add(this.txtGameRoot);
-            this.Controls.Add(this.txtDbFile);
+            this.Controls.Add(this.txtProjectRoot);
             this.Name = "FrmMain";
             this.Text = "Content Manager";
             this.tbcOperations.ResumeLayout(false);
@@ -773,7 +760,7 @@
         private System.Windows.Forms.Button btnBrowseGameRoot;
         private System.Windows.Forms.Button btnBrowseDbFile;
         private System.Windows.Forms.TextBox txtGameRoot;
-        private System.Windows.Forms.TextBox txtDbFile;
+        private System.Windows.Forms.TextBox txtProjectRoot;
         private System.Windows.Forms.TabControl tbcOperations;
         private System.Windows.Forms.TabPage tbContent;
         private System.Windows.Forms.TreeView trvFiles;
@@ -815,7 +802,6 @@
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.Button btnNewProjectFile;
         private System.Windows.Forms.ContextMenuStrip ctxCredits;
         private System.Windows.Forms.ToolStripMenuItem cmiAdd;
         private System.Windows.Forms.ToolStripMenuItem cmiRemove;

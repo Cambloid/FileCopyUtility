@@ -1,19 +1,11 @@
 ﻿using Base;
-using LiteDB;
+using ContentManager.Data;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -36,7 +28,7 @@ namespace ContentManager
 
         #region Private Vars
 
-
+        Project project;
 
         #endregion
 
@@ -58,8 +50,6 @@ namespace ContentManager
 
                 // Load all packages from db
                 this.loadPackages();
-
-
             }
         }
 
@@ -91,49 +81,30 @@ namespace ContentManager
                                byte[] checksum = sha.ComputeHash(stream);
 
                                fileHashes.TryAdd(BitConverter.ToString(checksum).Replace("-", String.Empty), files[index]);
-
                            }
                        });
 
+                Package pkg = new Package(pkgName, this.project.GetPackages().Count());
+                pkg.Path = pkgDir;
+                pkg.Credits = new string[] { "" };
 
-                using (var db = new LiteDatabase(Properties.Settings.Default.DbPath))
+
+                for (int i = 0; i < fileHashes.Count(); i++)
                 {
+                    PackageFile pkgFile = new PackageFile();
 
-                    var packages = db.GetCollection<Package>("Package_Table");
-                    int nextId = packages.Count();
+                    pkg.ByteSize += new FileInfo(fileHashes.ElementAt(i).Value).Length;
 
-                    if (files.Count() != fileHashes.Count())
-                    {
-                        return;
-                    }
+                    pkgFile.FileId = pkg.FileCollection.Count();
+                    pkgFile.Sha256 = fileHashes.ElementAt(i).Key;
+                    pkgFile.RelPath = Utility.StringDelta(pkgDir, fileHashes.ElementAt(i).Value);
+                    pkgFile.PackageFK = pkg.PkgId;
 
-                    Package pkg = new Package();
-                    pkg.PkgId   = nextId;
-                    pkg.Name    = pkgName;
-                    pkg.Path    = pkgDir;
-                    pkg.Credits = new string[] { "" };
-
-                    packages.Insert(pkg);
-
-
-                    var col = db.GetCollection<PackageFile>("PackageFile_Table");
-
-
-
-                    for (int i = 0; i < fileHashes.Count(); i++)
-                    {
-                        PackageFile pkgFile = new PackageFile();
-
-                        pkgFile.FileId = col.Count();
-                        pkgFile.Sha256Hash = fileHashes.ElementAt(i).Key;
-                        pkgFile.RelPath = Utility.StringDelta(pkgDir, fileHashes.ElementAt(i).Value);
-                        pkgFile.PackageFK = nextId;
-
-                        col.Insert(pkgFile);
-                    }
-
-
+                    pkg.FileCollection.Add(pkgFile);
                 }
+
+
+                this.project.AddPkg(pkg);
 
 
                 // 2. iterate through each file and generate hash and add to database
@@ -172,13 +143,13 @@ namespace ContentManager
 
         private void fillPathFields()
         {
-            string dbPath = Properties.Settings.Default.DbPath;
+            string dbPath = Properties.Settings.Default.ProjectRoot;
             string gameRoot = Properties.Settings.Default.GameRoot;
             string storage = Properties.Settings.Default.StoragePath;
             string backup = Properties.Settings.Default.BackupPath;
 
 
-            this.txtDbFile.Text = dbPath;
+            this.txtProjectRoot.Text = dbPath;
             this.txtGameRoot.Text = gameRoot;
             this.txtStoragePath.Text = storage;
             this.txtBackupDir.Text = backup;
@@ -191,12 +162,12 @@ namespace ContentManager
             // Update app status
             this.state = FormState.Ready;
 
-            string dbPath   = Properties.Settings.Default.DbPath;
+            string projectRoot   = Properties.Settings.Default.ProjectRoot;
             string gameRoot = Properties.Settings.Default.GameRoot;
             string storage  = Properties.Settings.Default.StoragePath;
             string backup   = Properties.Settings.Default.BackupPath;
 
-            if(dbPath == string.Empty)
+            if(projectRoot == string.Empty || !Directory.Exists(projectRoot))
             {
                 this.state = FormState.NotReady;
             }
@@ -227,7 +198,6 @@ namespace ContentManager
 
         private bool setDatabase()
         {
-
             if (this.state != FormState.Ready)
             {
                 return false;
@@ -235,21 +205,21 @@ namespace ContentManager
 
             try
             {
-                string dbPath = Properties.Settings.Default.DbPath;
+                string dbPath = Properties.Settings.Default.ProjectRoot;
 
-               if(!File.Exists(dbPath))
+               if(!Directory.Exists(dbPath))
                 {
                     return false;
                 }
-                
+
+                this.project = new Project(dbPath);
 
                 return true;
-
             } catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
 
-                Properties.Settings.Default.DbPath = string.Empty;
+                Properties.Settings.Default.ProjectRoot = string.Empty;
                 Properties.Settings.Default.Save();
 
             }
@@ -260,29 +230,19 @@ namespace ContentManager
 
         private void loadPackages()
         {
+
+            if(this.state != FormState.Ready)
+            {
+                return;
+            }
+
             this.lstPackages.Items.Clear();
 
-            using (var db = new LiteDatabase(Properties.Settings.Default.DbPath))
+            foreach (Package pkg in this.project.GetPackages())
             {
-                // Get Packages
-                var col = db.GetCollection<Package>("Package_Table");
-
-
-                // Check if db has packages
-                if (col.Count() <= 0)
-                {
-                    return;
-                }
-
-                var results = col.FindAll();
-
-                foreach (Package pkg in results)
-                {
-                    ListViewItem item = new ListViewItem(pkg.Name);
-                    item.Tag = pkg;
-
-                    this.lstPackages.Items.Add(item);
-                }
+                ListViewItem item = new ListViewItem(pkg.Name);
+                item.Tag = pkg;
+                this.lstPackages.Items.Add(item);
             }
         }
 
@@ -290,66 +250,52 @@ namespace ContentManager
         {
             this.trvFiles.Nodes.Clear();
 
-            using (var db = new LiteDatabase(Properties.Settings.Default.DbPath))
+            TreeNode lastNode = null;
+            string subPathAgg = string.Empty;
+
+            foreach (PackageFile file in pkg.FileCollection)
             {
-                var col = db.GetCollection<PackageFile>("PackageFile_Table");
-
-                // Check if db has packages
-                if (col.Count() <= 0)
+                subPathAgg = string.Empty;
+                bool first = true;
+                foreach (string subPath in file.RelPath.Split('\\'))
                 {
-                    return;
-                }
-
-                var results = col.Query().Where(x => x.PackageFK == pkg.PkgId).OrderBy(x => x.RelPath).ToList();
-
-                TreeNode lastNode = null;
-                string subPathAgg;
-                foreach (PackageFile file in results)
-                {
-                    subPathAgg = string.Empty;
-                    
-                    foreach (string subPath in file.RelPath.Split('\\'))
+                    string nodeName = string.Empty;
+                    if(subPath == string.Empty || first)
                     {
+                        nodeName = pkg.Name;
+                    } else
+                    {
+                        nodeName = subPath;
+                    }
+                    first = false;
 
-                        subPathAgg += subPath + '\\';
-                        TreeNode[] nodes = this.trvFiles.Nodes.Find(subPathAgg, true);
+                    subPathAgg += nodeName + '\\';
+                    TreeNode[] nodes = this.trvFiles.Nodes.Find(subPathAgg, true);
 
-                        if (nodes.Length == 0)
+                    if (nodes.Length == 0)
+                    {
+                        if (lastNode == null)
                         {
-                            if (lastNode == null)
-                            {
-                                lastNode = this.trvFiles.Nodes.Add(subPathAgg, subPath);
-                            }
-                            else
-                            {
-                                lastNode = lastNode.Nodes.Add(subPathAgg, subPath);
-                            }
+                            lastNode = this.trvFiles.Nodes.Add(subPathAgg, nodeName);
                         }
                         else
                         {
-                            lastNode = nodes[0];
+                            lastNode = lastNode.Nodes.Add(subPathAgg, nodeName);
                         }
+                    }
+                    else
+                    {
+                        lastNode = nodes[0];
                     }
                 }
             }
-        }
 
-        private void removeFilesByPackageId(int packageId)
-        {
-            using (LiteDatabase db = new LiteDatabase(Properties.Settings.Default.DbPath))
-            {
-                var col = db.GetCollection<PackageFile>("PackageFile_Table");
-                col.DeleteMany(x => x.PackageFK == packageId);
-            }
         }
 
         private void removePackageById(int packageId)
         {
-            using (LiteDatabase db = new LiteDatabase(Properties.Settings.Default.DbPath))
-            {
-                var col = db.GetCollection<Package>("Package_Table");
-                col.DeleteMany(x => x.PkgId == packageId);
-            }
+            this.project.RemovePkg(packageId);
+
         }
 
         private void selectFirstPackage()
@@ -370,35 +316,19 @@ namespace ContentManager
 
         #region Events
 
-        private void btnNewProjectFile_Click(object sender, EventArgs e)
-        {
-            string file = Utility.SaveFile("Database (*.db)|*.db");
-            if (file != string.Empty)
-            {
-
-                this.txtDbFile.Text = file;
-                Properties.Settings.Default.DbPath = file;
-                Properties.Settings.Default.Save();
-
-                this.updateStatus();
-                this.setDatabase();
-            }
-        }
-
         private void btnBrowseDbFile_Click(object sender, EventArgs e)
         {
-            string file = Utility.PickFile();
-
+            string file = Utility.PickFolder();
             if (file != string.Empty)
             {
-                this.txtDbFile.Text = file;
-                Properties.Settings.Default.DbPath = file;
+                this.txtProjectRoot.Text = file;
+
+                Properties.Settings.Default.ProjectRoot = file;
                 Properties.Settings.Default.Save();
 
                 this.updateStatus();
                 this.setDatabase();
             }
-
         }
 
         private void btnBrowseGameRoot_Click(object sender, EventArgs e)
@@ -459,17 +389,17 @@ namespace ContentManager
                 if (res == DialogResult.Yes && input.InputText != string.Empty)
                 {
                     // TODO: Create new package
-                    Package newPkg = new Package();
-                    newPkg.Name = input.InputText;
-                    newPkg.Path = string.Empty;
+                    //Package newPkg = new Package(input.InputText, this.project.GetPackages().Count());
+                    //newPkg.Path = string.Empty;
+
+                    this.project.CreatePkg(input.InputText);
 
 
-
-                    using (var db = new LiteDatabase(Properties.Settings.Default.DbPath))
-                    {
-                        var col = db.GetCollection<Package>("Package");
-                        col.Insert(newPkg);
-                    }
+                    //using (var db = new LiteDatabase(Properties.Settings.Default.DbPath))
+                    //{
+                    //    var col = db.GetCollection<Package>("Package");
+                    //    col.Insert(newPkg);
+                    //}
 
                     this.loadPackages();
                 }
@@ -506,6 +436,8 @@ namespace ContentManager
                 this.importPkgDir(folder, name);
                 this.loadPackages();
                 this.selectFirstPackage();
+
+                this.project.Save();
             }
         }
 
@@ -519,7 +451,7 @@ namespace ContentManager
                     {
                         Package pkg = (Package)this.lstPackages.SelectedItems[0].Tag;
 
-                        this.removeFilesByPackageId(pkg.PkgId);
+                        //this.removeFilesByPackageId(pkg.PkgId);
 
                         this.removePackageById(pkg.PkgId);
 

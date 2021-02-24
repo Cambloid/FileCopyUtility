@@ -10,21 +10,13 @@ namespace ContentManager.Data
 {
     public class Project
     {
-        #region Const
-
-        private const string JSON_PACKAGE = "Package";
-
-        private const string JSON_PACKAGE_FILE = "PackageFile";
-
-        #endregion
 
         #region Private vars
 
         private string rootDir = string.Empty;
         private const string JSON_DB_FILE_NAME = "PkgDatabase.json";
 
-        private List<Package> pkgCollection;
-        private Dictionary<Package, List<PackageFile>> filesByPackage;
+        private JsonFile jFile;
 
         #endregion
 
@@ -33,14 +25,14 @@ namespace ContentManager.Data
         public Project(string rootDir)
         {
             this.rootDir = rootDir;
-
             string jsonPath = Path.Combine(rootDir, JSON_DB_FILE_NAME);
-            if(File.Exists(jsonPath))
+            
+            if(!File.Exists(jsonPath))
             {
                 File.Create(jsonPath);
             }
 
-
+            this.jFile = new JsonFile(jsonPath);
         }
 
         #endregion
@@ -54,7 +46,27 @@ namespace ContentManager.Data
                 throw new PackageException("Package \"" + pkgName + "\" already exists.");
             }
 
-            this.pkgCollection.Add(new Package(pkgName, this.pkgCollection.Count()));
+            this.jFile.Header.PackageCollection.Add(new Package(pkgName, this.jFile.Header.PackageCollection.Count()));
+        }
+
+        public void AddPkg(Package pkg)
+        {
+            this.jFile.Header.PackageCollection.Add(pkg);
+        }
+
+        public void RemovePkg(int pkgId)
+        {
+            this.jFile.Header.PackageCollection.RemoveAll(x => x.PkgId == pkgId);
+        }
+
+        public List<Package> GetPackages()
+        {
+            return this.jFile.Header.PackageCollection;
+        }
+
+        public void Save()
+        {
+            this.jFile.Save();
         }
 
         #endregion
@@ -63,16 +75,7 @@ namespace ContentManager.Data
 
         private Package GetPackageByName(string pkgName)
         {
-            return this.pkgCollection.Find(pkg => pkg.Name == pkgName);
-        }
-
-        private void loadJson()
-        {
-            // Load packages
-            //JsonConvert.DeserializeObject<Package>()
-
-            // Load files by package
-
+            return this.jFile.Header.PackageCollection.Find(pkg => pkg.Name == pkgName);
         }
 
         #endregion

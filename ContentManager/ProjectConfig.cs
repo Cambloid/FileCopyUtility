@@ -37,28 +37,9 @@ namespace ContentManager
         public ConflictResolve Solution;
     }
 
-    public class PackageFile
-    {
-        public int FileId { get; set; }
+    
 
-        public string RelPath { get; set; }
-
-        public string Sha256Hash { get; set; }
-
-        public int PackageFK { get; set; }
-    }
-
-    public class Package
-    {
-        public int PkgId { get; set; }
-
-        public string Name { get; set; }
-
-        public string Path { get; set; }
-
-        public string[] Credits { get; set; }
-
-    }
+    
 
     public class ProjectConfig
     {
