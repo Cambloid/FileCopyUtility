@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConflictSearcher.cs" />
+    <Compile Include="FileConflict.cs" />
     <Compile Include="JsonFile.cs" />
     <Compile Include="Package.cs" />
     <Compile Include="PackageFile.cs" />

@@ -17,7 +17,7 @@ namespace ContentManager.Data
 
             this.FileCollection = new List<PackageFile>();
             this.Path = string.Empty;
-            this.Credits = new string[] { };
+            this.Credits = new string[0];
 
         }
 

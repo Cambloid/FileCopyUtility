@@ -94,6 +94,8 @@
             this.trvConflicts = new System.Windows.Forms.TreeView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnExec = new System.Windows.Forms.Button();
+            this.tbModDevFiles = new System.Windows.Forms.TabPage();
+            this.btnCheckPkg = new System.Windows.Forms.Button();
             this.tbcOperations.SuspendLayout();
             this.tbContent.SuspendLayout();
             this.grpActions.SuspendLayout();
@@ -230,13 +232,14 @@
             this.tbcOperations.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbcOperations.Controls.Add(this.tbModDevFiles);
             this.tbcOperations.Controls.Add(this.tbContent);
             this.tbcOperations.Controls.Add(this.tbConflicts);
             this.tbcOperations.Location = new System.Drawing.Point(12, 110);
             this.tbcOperations.Name = "tbcOperations";
             this.tbcOperations.SelectedIndex = 0;
             this.tbcOperations.Size = new System.Drawing.Size(1542, 671);
-            this.tbcOperations.TabIndex = 32;
+            this.tbcOperations.TabIndex = 0;
             // 
             // tbContent
             // 
@@ -265,7 +268,7 @@
             this.tbContent.Padding = new System.Windows.Forms.Padding(3);
             this.tbContent.Size = new System.Drawing.Size(1534, 645);
             this.tbContent.TabIndex = 0;
-            this.tbContent.Text = "Content";
+            this.tbContent.Text = "Community Packages";
             this.tbContent.UseVisualStyleBackColor = true;
             // 
             // btnBrowsePkg
@@ -276,6 +279,7 @@
             this.btnBrowsePkg.TabIndex = 44;
             this.btnBrowsePkg.Text = "...";
             this.btnBrowsePkg.UseVisualStyleBackColor = true;
+            this.btnBrowsePkg.Click += new System.EventHandler(this.btnBrowsePkg_Click);
             // 
             // grpPkgStatus
             // 
@@ -432,6 +436,7 @@
             // 
             this.txtPkgPath.Location = new System.Drawing.Point(687, 17);
             this.txtPkgPath.Name = "txtPkgPath";
+            this.txtPkgPath.ReadOnly = true;
             this.txtPkgPath.Size = new System.Drawing.Size(414, 20);
             this.txtPkgPath.TabIndex = 39;
             // 
@@ -467,6 +472,7 @@
             this.txtPkgName.Name = "txtPkgName";
             this.txtPkgName.Size = new System.Drawing.Size(277, 20);
             this.txtPkgName.TabIndex = 34;
+            this.txtPkgName.TextChanged += new System.EventHandler(this.txtPkgName_TextChanged);
             // 
             // trvFiles
             // 
@@ -552,7 +558,7 @@
             this.tbConflicts.Padding = new System.Windows.Forms.Padding(3);
             this.tbConflicts.Size = new System.Drawing.Size(1534, 645);
             this.tbConflicts.TabIndex = 1;
-            this.tbConflicts.Text = "Conflicts (1)";
+            this.tbConflicts.Text = "Pkg conflicts";
             this.tbConflicts.UseVisualStyleBackColor = true;
             // 
             // grpAutomatic
@@ -678,6 +684,7 @@
             // trvConflicts
             // 
             this.trvConflicts.Dock = System.Windows.Forms.DockStyle.Left;
+            this.trvConflicts.FullRowSelect = true;
             this.trvConflicts.Location = new System.Drawing.Point(3, 3);
             this.trvConflicts.Name = "trvConflicts";
             treeNode1.Name = "nodePkg";
@@ -694,6 +701,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Peru;
+            this.panel1.Controls.Add(this.btnCheckPkg);
             this.panel1.Controls.Add(this.btnExec);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(3, 613);
@@ -710,6 +718,26 @@
             this.btnExec.TabIndex = 0;
             this.btnExec.Text = "Save";
             this.btnExec.UseVisualStyleBackColor = true;
+            // 
+            // tbModDevFiles
+            // 
+            this.tbModDevFiles.Location = new System.Drawing.Point(4, 22);
+            this.tbModDevFiles.Name = "tbModDevFiles";
+            this.tbModDevFiles.Padding = new System.Windows.Forms.Padding(3);
+            this.tbModDevFiles.Size = new System.Drawing.Size(1534, 645);
+            this.tbModDevFiles.TabIndex = 2;
+            this.tbModDevFiles.Text = "Mod development";
+            this.tbModDevFiles.UseVisualStyleBackColor = true;
+            // 
+            // btnCheckPkg
+            // 
+            this.btnCheckPkg.Location = new System.Drawing.Point(7, 3);
+            this.btnCheckPkg.Name = "btnCheckPkg";
+            this.btnCheckPkg.Size = new System.Drawing.Size(182, 23);
+            this.btnCheckPkg.TabIndex = 59;
+            this.btnCheckPkg.Text = "Check packages for conflicts";
+            this.btnCheckPkg.UseVisualStyleBackColor = true;
+            this.btnCheckPkg.Click += new System.EventHandler(this.btnCheckPkg_Click);
             // 
             // FrmMain
             // 
@@ -809,6 +837,8 @@
         private System.Windows.Forms.TextBox txtPackageHash;
         private System.Windows.Forms.GroupBox grpPkgStatus;
         private System.Windows.Forms.Button btnBrowsePkg;
+        private System.Windows.Forms.TabPage tbModDevFiles;
+        private System.Windows.Forms.Button btnCheckPkg;
     }
 }
 

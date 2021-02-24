@@ -3,6 +3,7 @@ using ContentManager.Data;
 using System;
 using System.Collections.Concurrent;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -61,12 +62,10 @@ namespace ContentManager
         {
             try
             {
-
                 if (!Directory.Exists(pkgDir))
                 {
                     return;
                 }
-
 
                 string[] files = Directory.GetFiles(pkgDir, "*.*", SearchOption.AllDirectories);
                 ConcurrentDictionary<string, string> fileHashes = new ConcurrentDictionary<string, string>();
@@ -86,7 +85,7 @@ namespace ContentManager
 
                 Package pkg = new Package(pkgName, this.project.GetPackages().Count());
                 pkg.Path = pkgDir;
-                pkg.Credits = new string[] { "" };
+                pkg.Credits = new string[0];
 
 
                 for (int i = 0; i < fileHashes.Count(); i++)
@@ -246,8 +245,29 @@ namespace ContentManager
             }
         }
 
-        private void loadFilesBySelectedPackage(Package pkg)
+        private void setFieldsBySelectedPackage(Package pkg)
         {
+            this.txtPkgPath.Text = pkg.Path;
+            if(Directory.Exists(pkg.Path))
+            {
+                this.txtPkgPath.BackColor = Color.White;
+            } else
+            {
+                this.txtPkgPath.BackColor = Color.Red;
+            }
+
+            this.txtPkgName.Text = pkg.Name;
+            this.txtPkgId.Text = pkg.PkgId.ToString();
+            this.txtPkgSize.Text = pkg.ByteSize.ToString() + " Bytes";
+
+            this.lstCredits.Items.Clear();
+            foreach(string credit in pkg.Credits)
+            {
+                this.lstCredits.Items.Add(credit);
+            }
+
+
+
             this.trvFiles.Nodes.Clear();
 
             TreeNode lastNode = null;
@@ -307,7 +327,24 @@ namespace ContentManager
             else
             {
                 Package pkg = (Package)this.lstPackages.Items[0].Tag;
-                this.loadFilesBySelectedPackage(pkg);
+                this.setFieldsBySelectedPackage(pkg);
+            }
+        }
+
+        private void btnCheckPkg_Click(object sender, EventArgs e)
+        {
+            ConflictSearcher searcher = new ConflictSearcher(this.project);
+            var conflicts = searcher.FindConflicts();
+
+            this.trvConflicts.Nodes.Clear();
+            foreach(var conflict in conflicts)
+            {
+                TreeNode node = new TreeNode("File: " + conflict.Group[0].Item2.RelPath);
+                foreach(var group in conflict.Group)
+                {
+                    node.Nodes.Add(new TreeNode("In Package: " + group.Item1.Name));
+                }
+                this.trvConflicts.Nodes.Add(node);
             }
 
         }
@@ -491,18 +528,41 @@ namespace ContentManager
 
         private void cmiAdd_Click(object sender, EventArgs e)
         {
-            if (this.state == FormState.Ready)
+            if (this.state != FormState.Ready)
             {
-
+                return;
             }
+            if (this.lstPackages.SelectedItems.Count <= 0)
+            {
+                return;
+            }
+
+            
+
+            using (FrmInput creditName = new FrmInput())
+            {
+                creditName.ShowDialog(this);
+                if (creditName.DialogResult == DialogResult.Yes)
+                {
+                    this.lstCredits.Items.Add(creditName.InputText);
+                }
+            }
+
         }
 
         private void cmiRemove_Click(object sender, EventArgs e)
         {
-            if (this.state == FormState.Ready)
+            if (this.state != FormState.Ready)
             {
-
+                return;
             }
+            if (this.lstCredits.SelectedItems.Count <= 0)
+            {
+                return;
+            }
+
+            this.lstCredits.Items.RemoveAt(this.lstCredits.SelectedIndex);
+
         }
 
         private void lstPackages_SelectedIndexChanged(object sender, EventArgs e)
@@ -511,12 +571,52 @@ namespace ContentManager
             {
                 return;
             }
-
             ListViewItem item = (ListViewItem)this.lstPackages.SelectedItems[0];
-
             if(item != null)
             {
-                this.loadFilesBySelectedPackage((Package)item.Tag);
+                this.setFieldsBySelectedPackage((Package)item.Tag);
+            }
+        }
+
+        private void txtPkgName_TextChanged(object sender, EventArgs e)
+        {
+            if (this.lstPackages.SelectedItems.Count <= 0)
+            {
+                return;
+            }
+
+            if(this.state != FormState.Ready)
+            {
+                return;
+            }
+
+            Package pkg = (Package)this.lstPackages.SelectedItems[0].Tag;
+            if(this.txtPkgName.Text != string.Empty)
+            {
+                pkg.Name = this.txtPkgName.Text;
+                this.lstPackages.SelectedItems[0].Text = this.txtPkgName.Text;
+            }
+
+        }
+
+        private void btnBrowsePkg_Click(object sender, EventArgs e)
+        {
+            if (this.lstPackages.SelectedItems.Count <= 0)
+            {
+                return;
+            }
+
+            if (this.state != FormState.Ready)
+            {
+                return;
+            }
+
+            Package pkg = (Package)this.lstPackages.SelectedItems[0].Tag;
+
+            string newPath = Utility.PickFolder();
+            if (newPath != string.Empty)
+            {
+                pkg.Path = newPath;
             }
 
         }
