@@ -44,10 +44,15 @@ namespace ContentManager
                 TreeNode node = new TreeNode("File: " + conflict.Group[0].Item2.RelPath);
                 foreach (var group in conflict.Group)
                 {
-                    node.Nodes.Add(new TreeNode("In Package: " + group.Item1.Name));
+                    node.Nodes.Add(new TreeNode("In package: " + group.Item1.Name));
                 }
                 this.trvConflicts.Nodes.Add(node);
             }
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            this.project.Save();
         }
 
         #endregion

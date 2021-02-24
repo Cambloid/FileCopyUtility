@@ -31,7 +31,7 @@ namespace ContentManager
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnCheckPkg = new System.Windows.Forms.Button();
-            this.btnExec = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.grpAutomatic = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -59,11 +59,11 @@ namespace ContentManager
             // 
             this.panel1.BackColor = System.Drawing.Color.Peru;
             this.panel1.Controls.Add(this.btnCheckPkg);
-            this.panel1.Controls.Add(this.btnExec);
+            this.panel1.Controls.Add(this.btnSave);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 792);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1034, 29);
+            this.panel1.Size = new System.Drawing.Size(1559, 29);
             this.panel1.TabIndex = 60;
             // 
             // btnCheckPkg
@@ -76,15 +76,18 @@ namespace ContentManager
             this.btnCheckPkg.UseVisualStyleBackColor = true;
             this.btnCheckPkg.Click += new System.EventHandler(this.btnCheckPkg_Click);
             // 
-            // btnExec
+            // btnSave
             // 
-            this.btnExec.Enabled = false;
-            this.btnExec.Location = new System.Drawing.Point(1311, 3);
-            this.btnExec.Name = "btnExec";
-            this.btnExec.Size = new System.Drawing.Size(214, 23);
-            this.btnExec.TabIndex = 0;
-            this.btnExec.Text = "Save";
-            this.btnExec.UseVisualStyleBackColor = true;
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSave.Enabled = false;
+            this.btnSave.Location = new System.Drawing.Point(1342, 3);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(214, 23);
+            this.btnSave.TabIndex = 0;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // button3
             // 
@@ -222,9 +225,8 @@ namespace ContentManager
             this.splitContainer1.Panel2.Controls.Add(this.grpFileOp);
             this.splitContainer1.Panel2.Controls.Add(this.comboBox2);
             this.splitContainer1.Panel2.Controls.Add(this.grpAutomatic);
-            this.splitContainer1.Panel2.Controls.Add(this.panel1);
             this.splitContainer1.Panel2.Controls.Add(this.button1);
-            this.splitContainer1.Size = new System.Drawing.Size(1559, 821);
+            this.splitContainer1.Size = new System.Drawing.Size(1559, 792);
             this.splitContainer1.SplitterDistance = 521;
             this.splitContainer1.TabIndex = 67;
             // 
@@ -234,7 +236,7 @@ namespace ContentManager
             this.trvConflicts.FullRowSelect = true;
             this.trvConflicts.Location = new System.Drawing.Point(0, 0);
             this.trvConflicts.Name = "trvConflicts";
-            this.trvConflicts.Size = new System.Drawing.Size(521, 821);
+            this.trvConflicts.Size = new System.Drawing.Size(521, 792);
             this.trvConflicts.TabIndex = 62;
             // 
             // PkgConflict
@@ -242,6 +244,7 @@ namespace ContentManager
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.panel1);
             this.Name = "PkgConflict";
             this.Size = new System.Drawing.Size(1559, 821);
             this.panel1.ResumeLayout(false);
@@ -260,7 +263,7 @@ namespace ContentManager
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnCheckPkg;
-        private System.Windows.Forms.Button btnExec;
+        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.GroupBox grpAutomatic;
         private System.Windows.Forms.Button button1;
