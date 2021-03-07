@@ -34,11 +34,9 @@ namespace ContentManager
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.lstPackages = new System.Windows.Forms.ListView();
             this.colPackage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.trvFiles = new System.Windows.Forms.TreeView();
             this.btnBrowsePkg = new System.Windows.Forms.Button();
-            this.grpPkgStatus = new System.Windows.Forms.GroupBox();
-            this.lblPackageHash = new System.Windows.Forms.Label();
-            this.txtPackageHash = new System.Windows.Forms.TextBox();
+            this.lblFileHash = new System.Windows.Forms.Label();
+            this.txtFileHash = new System.Windows.Forms.TextBox();
             this.lblStatus = new System.Windows.Forms.Label();
             this.txtPkgStatus = new System.Windows.Forms.TextBox();
             this.lblCredits = new System.Windows.Forms.Label();
@@ -57,6 +55,14 @@ namespace ContentManager
             this.ctxCredits = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmiAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiRemove = new System.Windows.Forms.ToolStripMenuItem();
+            this.grpFileInfo = new System.Windows.Forms.GroupBox();
+            this.lblFileName = new System.Windows.Forms.Label();
+            this.txtFileName = new System.Windows.Forms.TextBox();
+            this.chkDoNotCopy = new System.Windows.Forms.CheckBox();
+            this.lblRelPath = new System.Windows.Forms.Label();
+            this.txtRelPath = new System.Windows.Forms.TextBox();
+            this.lstFiles = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -67,6 +73,7 @@ namespace ContentManager
             this.splitContainer2.SuspendLayout();
             this.panel2.SuspendLayout();
             this.ctxCredits.SuspendLayout();
+            this.grpFileInfo.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -81,10 +88,8 @@ namespace ContentManager
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.grpFileInfo);
             this.splitContainer1.Panel2.Controls.Add(this.btnBrowsePkg);
-            this.splitContainer1.Panel2.Controls.Add(this.grpPkgStatus);
-            this.splitContainer1.Panel2.Controls.Add(this.lblPackageHash);
-            this.splitContainer1.Panel2.Controls.Add(this.txtPackageHash);
             this.splitContainer1.Panel2.Controls.Add(this.lblStatus);
             this.splitContainer1.Panel2.Controls.Add(this.txtPkgStatus);
             this.splitContainer1.Panel2.Controls.Add(this.lblCredits);
@@ -113,7 +118,7 @@ namespace ContentManager
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.trvFiles);
+            this.splitContainer2.Panel2.Controls.Add(this.lstFiles);
             this.splitContainer2.Size = new System.Drawing.Size(516, 839);
             this.splitContainer2.SplitterDistance = 220;
             this.splitContainer2.TabIndex = 0;
@@ -139,14 +144,6 @@ namespace ContentManager
             this.colPackage.Text = "Package";
             this.colPackage.Width = 204;
             // 
-            // trvFiles
-            // 
-            this.trvFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trvFiles.Location = new System.Drawing.Point(0, 0);
-            this.trvFiles.Name = "trvFiles";
-            this.trvFiles.Size = new System.Drawing.Size(292, 839);
-            this.trvFiles.TabIndex = 34;
-            // 
             // btnBrowsePkg
             // 
             this.btnBrowsePkg.Location = new System.Drawing.Point(527, 22);
@@ -157,36 +154,27 @@ namespace ContentManager
             this.btnBrowsePkg.UseVisualStyleBackColor = true;
             this.btnBrowsePkg.Click += new System.EventHandler(this.btnBrowsePkg_Click);
             // 
-            // grpPkgStatus
+            // lblFileHash
             // 
-            this.grpPkgStatus.Location = new System.Drawing.Point(569, 22);
-            this.grpPkgStatus.Name = "grpPkgStatus";
-            this.grpPkgStatus.Size = new System.Drawing.Size(311, 100);
-            this.grpPkgStatus.TabIndex = 70;
-            this.grpPkgStatus.TabStop = false;
-            this.grpPkgStatus.Text = "Package status";
+            this.lblFileHash.AutoSize = true;
+            this.lblFileHash.Location = new System.Drawing.Point(32, 82);
+            this.lblFileHash.Name = "lblFileHash";
+            this.lblFileHash.Size = new System.Drawing.Size(52, 13);
+            this.lblFileHash.TabIndex = 69;
+            this.lblFileHash.Text = "File hash:";
             // 
-            // lblPackageHash
+            // txtFileHash
             // 
-            this.lblPackageHash.AutoSize = true;
-            this.lblPackageHash.Location = new System.Drawing.Point(19, 77);
-            this.lblPackageHash.Name = "lblPackageHash";
-            this.lblPackageHash.Size = new System.Drawing.Size(79, 13);
-            this.lblPackageHash.TabIndex = 69;
-            this.lblPackageHash.Text = "Package hash:";
-            // 
-            // txtPackageHash
-            // 
-            this.txtPackageHash.Location = new System.Drawing.Point(107, 74);
-            this.txtPackageHash.Name = "txtPackageHash";
-            this.txtPackageHash.ReadOnly = true;
-            this.txtPackageHash.Size = new System.Drawing.Size(456, 20);
-            this.txtPackageHash.TabIndex = 68;
+            this.txtFileHash.Location = new System.Drawing.Point(90, 79);
+            this.txtFileHash.Name = "txtFileHash";
+            this.txtFileHash.ReadOnly = true;
+            this.txtFileHash.Size = new System.Drawing.Size(456, 20);
+            this.txtFileHash.TabIndex = 68;
             // 
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(373, 103);
+            this.lblStatus.Location = new System.Drawing.Point(373, 77);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(84, 13);
             this.lblStatus.TabIndex = 67;
@@ -194,7 +182,7 @@ namespace ContentManager
             // 
             // txtPkgStatus
             // 
-            this.txtPkgStatus.Location = new System.Drawing.Point(463, 100);
+            this.txtPkgStatus.Location = new System.Drawing.Point(463, 74);
             this.txtPkgStatus.Name = "txtPkgStatus";
             this.txtPkgStatus.ReadOnly = true;
             this.txtPkgStatus.Size = new System.Drawing.Size(100, 20);
@@ -203,7 +191,7 @@ namespace ContentManager
             // lblCredits
             // 
             this.lblCredits.AutoSize = true;
-            this.lblCredits.Location = new System.Drawing.Point(14, 127);
+            this.lblCredits.Location = new System.Drawing.Point(14, 101);
             this.lblCredits.Name = "lblCredits";
             this.lblCredits.Size = new System.Drawing.Size(87, 13);
             this.lblCredits.TabIndex = 65;
@@ -212,7 +200,7 @@ namespace ContentManager
             // lstCredits
             // 
             this.lstCredits.FormattingEnabled = true;
-            this.lstCredits.Location = new System.Drawing.Point(107, 127);
+            this.lstCredits.Location = new System.Drawing.Point(107, 101);
             this.lstCredits.Name = "lstCredits";
             this.lstCredits.Size = new System.Drawing.Size(277, 186);
             this.lstCredits.TabIndex = 64;
@@ -220,7 +208,7 @@ namespace ContentManager
             // lblPackageSize
             // 
             this.lblPackageSize.AutoSize = true;
-            this.lblPackageSize.Location = new System.Drawing.Point(27, 103);
+            this.lblPackageSize.Location = new System.Drawing.Point(27, 77);
             this.lblPackageSize.Name = "lblPackageSize";
             this.lblPackageSize.Size = new System.Drawing.Size(74, 13);
             this.lblPackageSize.TabIndex = 63;
@@ -228,7 +216,7 @@ namespace ContentManager
             // 
             // txtPkgSize
             // 
-            this.txtPkgSize.Location = new System.Drawing.Point(107, 100);
+            this.txtPkgSize.Location = new System.Drawing.Point(107, 74);
             this.txtPkgSize.Name = "txtPkgSize";
             this.txtPkgSize.ReadOnly = true;
             this.txtPkgSize.Size = new System.Drawing.Size(102, 20);
@@ -326,16 +314,98 @@ namespace ContentManager
             // cmiAdd
             // 
             this.cmiAdd.Name = "cmiAdd";
-            this.cmiAdd.Size = new System.Drawing.Size(180, 22);
+            this.cmiAdd.Size = new System.Drawing.Size(117, 22);
             this.cmiAdd.Text = "Add";
             this.cmiAdd.Click += new System.EventHandler(this.cmiAdd_Click);
             // 
             // cmiRemove
             // 
             this.cmiRemove.Name = "cmiRemove";
-            this.cmiRemove.Size = new System.Drawing.Size(180, 22);
+            this.cmiRemove.Size = new System.Drawing.Size(117, 22);
             this.cmiRemove.Text = "Remove";
             this.cmiRemove.Click += new System.EventHandler(this.cmiRemove_Click);
+            // 
+            // grpFileInfo
+            // 
+            this.grpFileInfo.Controls.Add(this.lblRelPath);
+            this.grpFileInfo.Controls.Add(this.txtRelPath);
+            this.grpFileInfo.Controls.Add(this.chkDoNotCopy);
+            this.grpFileInfo.Controls.Add(this.lblFileName);
+            this.grpFileInfo.Controls.Add(this.txtFileName);
+            this.grpFileInfo.Controls.Add(this.txtFileHash);
+            this.grpFileInfo.Controls.Add(this.lblFileHash);
+            this.grpFileInfo.Location = new System.Drawing.Point(17, 293);
+            this.grpFileInfo.Name = "grpFileInfo";
+            this.grpFileInfo.Size = new System.Drawing.Size(846, 253);
+            this.grpFileInfo.TabIndex = 71;
+            this.grpFileInfo.TabStop = false;
+            this.grpFileInfo.Text = "File";
+            // 
+            // lblFileName
+            // 
+            this.lblFileName.AutoSize = true;
+            this.lblFileName.Location = new System.Drawing.Point(29, 56);
+            this.lblFileName.Name = "lblFileName";
+            this.lblFileName.Size = new System.Drawing.Size(55, 13);
+            this.lblFileName.TabIndex = 71;
+            this.lblFileName.Text = "File name:";
+            // 
+            // txtFileName
+            // 
+            this.txtFileName.Location = new System.Drawing.Point(90, 53);
+            this.txtFileName.Name = "txtFileName";
+            this.txtFileName.ReadOnly = true;
+            this.txtFileName.Size = new System.Drawing.Size(456, 20);
+            this.txtFileName.TabIndex = 70;
+            // 
+            // chkDoNotCopy
+            // 
+            this.chkDoNotCopy.AutoSize = true;
+            this.chkDoNotCopy.Location = new System.Drawing.Point(90, 106);
+            this.chkDoNotCopy.Name = "chkDoNotCopy";
+            this.chkDoNotCopy.Size = new System.Drawing.Size(146, 17);
+            this.chkDoNotCopy.TabIndex = 72;
+            this.chkDoNotCopy.Text = "Do not copy to game root";
+            this.chkDoNotCopy.UseVisualStyleBackColor = true;
+            this.chkDoNotCopy.CheckedChanged += new System.EventHandler(this.chkDoNotCopy_CheckedChanged);
+            // 
+            // lblRelPath
+            // 
+            this.lblRelPath.AutoSize = true;
+            this.lblRelPath.Location = new System.Drawing.Point(34, 30);
+            this.lblRelPath.Name = "lblRelPath";
+            this.lblRelPath.Size = new System.Drawing.Size(50, 13);
+            this.lblRelPath.TabIndex = 74;
+            this.lblRelPath.Text = "Rel path:";
+            // 
+            // txtRelPath
+            // 
+            this.txtRelPath.Location = new System.Drawing.Point(90, 27);
+            this.txtRelPath.Name = "txtRelPath";
+            this.txtRelPath.ReadOnly = true;
+            this.txtRelPath.Size = new System.Drawing.Size(456, 20);
+            this.txtRelPath.TabIndex = 73;
+            // 
+            // lstFiles
+            // 
+            this.lstFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
+            this.lstFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstFiles.FullRowSelect = true;
+            this.lstFiles.GridLines = true;
+            this.lstFiles.HideSelection = false;
+            this.lstFiles.Location = new System.Drawing.Point(0, 0);
+            this.lstFiles.Name = "lstFiles";
+            this.lstFiles.Size = new System.Drawing.Size(292, 839);
+            this.lstFiles.TabIndex = 34;
+            this.lstFiles.UseCompatibleStateImageBehavior = false;
+            this.lstFiles.View = System.Windows.Forms.View.Details;
+            this.lstFiles.SelectedIndexChanged += new System.EventHandler(this.lstFiles_SelectedIndexChanged);
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "File";
+            this.columnHeader1.Width = 204;
             // 
             // Packages
             // 
@@ -356,6 +426,8 @@ namespace ContentManager
             this.splitContainer2.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.ctxCredits.ResumeLayout(false);
+            this.grpFileInfo.ResumeLayout(false);
+            this.grpFileInfo.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -369,11 +441,9 @@ namespace ContentManager
         private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.ListView lstPackages;
         private System.Windows.Forms.ColumnHeader colPackage;
-        private System.Windows.Forms.TreeView trvFiles;
         private System.Windows.Forms.Button btnBrowsePkg;
-        private System.Windows.Forms.GroupBox grpPkgStatus;
-        private System.Windows.Forms.Label lblPackageHash;
-        private System.Windows.Forms.TextBox txtPackageHash;
+        private System.Windows.Forms.Label lblFileHash;
+        private System.Windows.Forms.TextBox txtFileHash;
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.TextBox txtPkgStatus;
         private System.Windows.Forms.Label lblCredits;
@@ -389,5 +459,13 @@ namespace ContentManager
         private System.Windows.Forms.ContextMenuStrip ctxCredits;
         private System.Windows.Forms.ToolStripMenuItem cmiAdd;
         private System.Windows.Forms.ToolStripMenuItem cmiRemove;
+        private System.Windows.Forms.GroupBox grpFileInfo;
+        private System.Windows.Forms.Label lblFileName;
+        private System.Windows.Forms.TextBox txtFileName;
+        private System.Windows.Forms.Label lblRelPath;
+        private System.Windows.Forms.TextBox txtRelPath;
+        private System.Windows.Forms.CheckBox chkDoNotCopy;
+        private System.Windows.Forms.ListView lstFiles;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
     }
 }

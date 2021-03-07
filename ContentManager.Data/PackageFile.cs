@@ -14,6 +14,8 @@ namespace ContentManager.Data
             this.RelPath = string.Empty;
             this.Sha256 = string.Empty;
             this.PackageFK = -1;
+            this.Name = string.Empty;
+            this.DoNotCopy = false;
         }
         public int FileId { get; set; }
 
@@ -22,5 +24,9 @@ namespace ContentManager.Data
         public string Sha256 { get; set; }
 
         public int PackageFK { get; set; }
+
+        public string Name { get; set; }
+
+        public bool DoNotCopy { get; set; }
     }
 }

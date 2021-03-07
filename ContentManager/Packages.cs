@@ -29,6 +29,8 @@ namespace ContentManager
 
         private Project project;
 
+        private bool listSelectionChanging = false;
+
         #endregion
 
         #region Constructor
@@ -38,7 +40,6 @@ namespace ContentManager
             InitializeComponent();
 
             this.project = project;
-            this.trvFiles.PathSeparator = @"\";
 
             this.state = FormState.Ready;
 
@@ -120,7 +121,7 @@ namespace ContentManager
 
             // Pkg info
             this.lstPackages.Enabled = this.state == FormState.Ready;
-            this.trvFiles.Enabled = this.state == FormState.Ready;
+            this.lstFiles.Enabled = this.state == FormState.Ready;
             this.txtPkgPath.Enabled = this.state == FormState.Ready;
             this.txtPkgName.Enabled = this.state == FormState.Ready;
             this.btnBrowsePkg.Enabled = this.state == FormState.Ready;
@@ -158,7 +159,7 @@ namespace ContentManager
         {
             if (this.lstPackages.Items.Count <= 0)
             {
-                this.trvFiles.Nodes.Clear();
+                this.lstFiles.Items.Clear();
             }
             else
             {
@@ -191,51 +192,38 @@ namespace ContentManager
 
 
 
-            this.trvFiles.Nodes.Clear();
+            this.lstFiles.Items.Clear();
 
             TreeNode lastNode = null;
-            string subPathAgg = string.Empty;
+            string subPathAdd = string.Empty;
 
-            foreach (PackageFile file in pkg.FileCollection)
+            foreach (PackageFile file in pkg.FileCollection.OrderBy(x => x.RelPath))
             {
-                subPathAgg = string.Empty;
-                bool first = true;
-                foreach (string subPath in file.RelPath.Split('\\'))
-                {
-                    string nodeName = string.Empty;
-                    if (subPath == string.Empty || first)
-                    {
-                        nodeName = pkg.Name;
-                    }
-                    else
-                    {
-                        nodeName = subPath;
-                    }
-                    first = false;
-
-                    subPathAgg += nodeName + '\\';
-                    TreeNode[] nodes = this.trvFiles.Nodes.Find(subPathAgg, true);
-
-                    if (nodes.Length == 0)
-                    {
-                        if (lastNode == null)
-                        {
-                            lastNode = this.trvFiles.Nodes.Add(subPathAgg, nodeName);
-                        }
-                        else
-                        {
-                            lastNode = lastNode.Nodes.Add(subPathAgg, nodeName);
-                        }
-                    }
-                    else
-                    {
-                        lastNode = nodes[0];
-                    }
-                }
+                var item = new ListViewItem(file.RelPath);
+                item.Tag = file;
+                this.lstFiles.Items.Add(item);
             }
 
         }
 
+        private void setFileFields(PackageFile file)
+        {
+            this.txtFileHash.Text     = string.Empty;
+            this.txtRelPath.Text      = string.Empty;
+            this.txtFileName.Text     = string.Empty;
+            this.chkDoNotCopy.Checked = false;
+
+            if (file == null)
+            {
+                return;
+            }
+
+            this.txtFileHash.Text = file.Sha256;
+            this.txtRelPath.Text = file.RelPath;
+            this.txtFileName.Text = file.Name;
+            this.chkDoNotCopy.Checked = file.DoNotCopy;
+
+        }
         #endregion
 
         #region Events
@@ -329,6 +317,9 @@ namespace ContentManager
 
         private void lstPackages_SelectedIndexChanged(object sender, EventArgs e)
         {
+
+            this.listSelectionChanging = true;
+
             if (this.lstPackages.SelectedItems.Count <= 0)
             {
                 return;
@@ -338,6 +329,9 @@ namespace ContentManager
             {
                 this.setFieldsBySelectedPackage((Package)item.Tag);
             }
+
+
+            this.listSelectionChanging = false;
         }
 
         private void cmiAdd_Click(object sender, EventArgs e)
@@ -377,12 +371,10 @@ namespace ContentManager
 
         private void txtPkgName_TextChanged(object sender, EventArgs e)
         {
-            if (this.lstPackages.SelectedItems.Count <= 0)
-            {
-                return;
-            }
 
-            if (this.state != FormState.Ready)
+            if (this.lstPackages.SelectedItems.Count <= 0 || 
+                this.state != FormState.Ready || 
+                listSelectionChanging)
             {
                 return;
             }
@@ -395,8 +387,28 @@ namespace ContentManager
             }
         }
 
-        #endregion
+        private void lstFiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.listSelectionChanging = true;
 
+            if (this.lstFiles.SelectedItems.Count > 0)
+            {
+                this.setFileFields((PackageFile)this.lstFiles.SelectedItems[0].Tag);
+            }
+
+            this.listSelectionChanging = false;
+        }
+
+        private void chkDoNotCopy_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.lstFiles.SelectedItems.Count > 0  && !listSelectionChanging)
+            {
+                var file = (PackageFile)this.lstFiles.SelectedItems[0].Tag;
+                file.DoNotCopy = this.chkDoNotCopy.Checked;
+                this.project.Save();
+            }
+        }
+        #endregion
 
     }
 }

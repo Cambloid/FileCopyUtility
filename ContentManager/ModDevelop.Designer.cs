@@ -65,7 +65,7 @@ namespace ContentManager
             // btnCompare
             // 
             this.btnCompare.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnCompare.Location = new System.Drawing.Point(466, 545);
+            this.btnCompare.Location = new System.Drawing.Point(466, 547);
             this.btnCompare.Name = "btnCompare";
             this.btnCompare.Size = new System.Drawing.Size(114, 23);
             this.btnCompare.TabIndex = 20;
@@ -76,7 +76,7 @@ namespace ContentManager
             // btnAbout
             // 
             this.btnAbout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAbout.Location = new System.Drawing.Point(1390, 619);
+            this.btnAbout.Location = new System.Drawing.Point(1375, 621);
             this.btnAbout.Name = "btnAbout";
             this.btnAbout.Size = new System.Drawing.Size(75, 23);
             this.btnAbout.TabIndex = 25;
@@ -95,7 +95,7 @@ namespace ContentManager
             this.grpFilter.Controls.Add(this.chkFilesEven);
             this.grpFilter.Controls.Add(this.chkRepoIsNewer);
             this.grpFilter.Controls.Add(this.chkGameRootIsNewer);
-            this.grpFilter.Location = new System.Drawing.Point(804, 526);
+            this.grpFilter.Location = new System.Drawing.Point(804, 528);
             this.grpFilter.Name = "grpFilter";
             this.grpFilter.Size = new System.Drawing.Size(566, 116);
             this.grpFilter.TabIndex = 24;
@@ -218,7 +218,7 @@ namespace ContentManager
             this.grpFiles.Controls.Add(this.btnAddUnlisted);
             this.grpFiles.Controls.Add(this.btnRemoveFile);
             this.grpFiles.Controls.Add(this.btnAddFile);
-            this.grpFiles.Location = new System.Drawing.Point(3, 526);
+            this.grpFiles.Location = new System.Drawing.Point(3, 528);
             this.grpFiles.Name = "grpFiles";
             this.grpFiles.Size = new System.Drawing.Size(228, 116);
             this.grpFiles.TabIndex = 22;
@@ -259,7 +259,7 @@ namespace ContentManager
             // 
             this.grpRepository.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.grpRepository.Controls.Add(this.btnCopyToGameRoot);
-            this.grpRepository.Location = new System.Drawing.Point(237, 526);
+            this.grpRepository.Location = new System.Drawing.Point(237, 528);
             this.grpRepository.Name = "grpRepository";
             this.grpRepository.Size = new System.Drawing.Size(223, 116);
             this.grpRepository.TabIndex = 21;
@@ -291,7 +291,7 @@ namespace ContentManager
             this.listFiles.HideSelection = false;
             this.listFiles.Location = new System.Drawing.Point(3, 3);
             this.listFiles.Name = "listFiles";
-            this.listFiles.Size = new System.Drawing.Size(1462, 517);
+            this.listFiles.Size = new System.Drawing.Size(1447, 519);
             this.listFiles.TabIndex = 19;
             this.listFiles.UseCompatibleStateImageBehavior = false;
             this.listFiles.View = System.Windows.Forms.View.Details;
@@ -321,7 +321,7 @@ namespace ContentManager
             // 
             this.grpGameRoot.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.grpGameRoot.Controls.Add(this.btnCopyToRepo);
-            this.grpGameRoot.Location = new System.Drawing.Point(586, 526);
+            this.grpGameRoot.Location = new System.Drawing.Point(586, 528);
             this.grpGameRoot.Name = "grpGameRoot";
             this.grpGameRoot.Size = new System.Drawing.Size(212, 116);
             this.grpGameRoot.TabIndex = 23;
@@ -350,7 +350,7 @@ namespace ContentManager
             this.Controls.Add(this.listFiles);
             this.Controls.Add(this.grpGameRoot);
             this.Name = "ModDevelop";
-            this.Size = new System.Drawing.Size(1468, 645);
+            this.Size = new System.Drawing.Size(1453, 647);
             this.grpFilter.ResumeLayout(false);
             this.grpFilter.PerformLayout();
             this.grpSearch.ResumeLayout(false);
