@@ -40,13 +40,7 @@ namespace ContentManager
             InitializeComponent();
 
             this.project = project;
-
-            this.state = FormState.Ready;
-
-            this.loadPackages();
-            this.selectFirstPackage();
-
-            this.setFieldsByStatus();
+            this.btnSave.Enabled = false;
         }
 
         #endregion
@@ -130,7 +124,7 @@ namespace ContentManager
 
         }
 
-        private void loadPackages()
+        private void fillListPackages()
         {
 
             if (this.state != FormState.Ready)
@@ -152,7 +146,7 @@ namespace ContentManager
         {
             this.project.RemovePkg(packageId);
 
-            this.project.Save();
+            this.btnSave.Enabled = true;
         }
 
         private void selectFirstPackage()
@@ -204,6 +198,8 @@ namespace ContentManager
                 this.lstFiles.Items.Add(item);
             }
 
+            this.txtPkgStatus.Text =
+                pkg.Status == Package.PackageStatus.Installed ? "Installed" : "Not Installed";
         }
 
         private void setFileFields(PackageFile file)
@@ -222,8 +218,18 @@ namespace ContentManager
             this.txtRelPath.Text = file.RelPath;
             this.txtFileName.Text = file.Name;
             this.chkDoNotCopy.Checked = file.DoNotCopy;
+            
 
         }
+       
+        private void updateFormState()
+        {
+
+            // TODO: Check formstate
+            this.state = FormState.Ready;
+
+        }
+
         #endregion
 
         #region Events
@@ -256,10 +262,10 @@ namespace ContentManager
             if (folder != string.Empty)
             {
                 this.importPkgDir(folder, name);
-                this.loadPackages();
+                this.fillListPackages();
                 this.selectFirstPackage();
 
-                this.project.Save();
+                this.btnSave.Enabled = true;
             }
         }
 
@@ -277,7 +283,7 @@ namespace ContentManager
 
                         this.removePackageById(pkg.PkgId);
 
-                        this.loadPackages();
+                        this.fillListPackages();
 
                         this.selectFirstPackage();
 
@@ -384,6 +390,8 @@ namespace ContentManager
             {
                 pkg.Name = this.txtPkgName.Text;
                 this.lstPackages.SelectedItems[0].Text = this.txtPkgName.Text;
+
+                this.btnSave.Enabled = true;
             }
         }
 
@@ -405,9 +413,49 @@ namespace ContentManager
             {
                 var file = (PackageFile)this.lstFiles.SelectedItems[0].Tag;
                 file.DoNotCopy = this.chkDoNotCopy.Checked;
-                this.project.Save();
+                this.btnSave.Enabled = true;
             }
         }
+
+        private void Packages_Load(object sender, EventArgs e)
+        {
+            this.updateFormState();
+
+            this.fillListPackages();
+            this.selectFirstPackage();
+            this.setFieldsByStatus();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            this.project.Save();
+            this.btnSave.Enabled = false;
+        }
+
+        private void btnCheckPkgStatus_Click(object sender, EventArgs e)
+        {
+
+            // Check if package is installed
+            // A package is installed when:
+            // - all the files which can be copied (except files with DoNotCopy flag set) exist in the gameroot dir
+            // - Files from the package and in the gameroot dir have the same hash value
+
+            if (this.lstPackages.SelectedItems.Count > 0)
+            {
+                Package selectedPkg = (Package)this.lstPackages.SelectedItems[0].Tag;
+                if (selectedPkg != null)
+                {
+                    // Check files
+
+                    PackageHandler handler = new PackageHandler(this.project);
+                    handler.CheckStatusAndUpdate(selectedPkg);
+
+                }
+
+            }
+
+        }
+
         #endregion
 
     }

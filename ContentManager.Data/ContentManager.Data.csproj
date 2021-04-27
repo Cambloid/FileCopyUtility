@@ -46,14 +46,21 @@
   <ItemGroup>
     <Compile Include="ConflictSearcher.cs" />
     <Compile Include="FileConflict.cs" />
-    <Compile Include="JsonFile.cs" />
+    <Compile Include="JsonFileHandler.cs" />
     <Compile Include="Package.cs" />
     <Compile Include="PackageFile.cs" />
+    <Compile Include="PackageHandler.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Base\Base.csproj">
+      <Project>{22713538-c750-406d-b37c-4e4c53cdda7a}</Project>
+      <Name>Base</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,7 +24,8 @@ namespace Base
                 Directory.Exists(Utility.AdvancedPathCombine(gamerootDir, "xanim_export")) &&
                 Directory.Exists(Utility.AdvancedPathCombine(gamerootDir, "source_data")) &&
                 Directory.Exists(Utility.AdvancedPathCombine(gamerootDir, "texture_assets")) &&
-                Directory.Exists(Utility.AdvancedPathCombine(gamerootDir, "sound_assets"));
+                Directory.Exists(Utility.AdvancedPathCombine(gamerootDir, "sound_assets")) && 
+                File.Exists(Utility.AdvancedPathCombine(gamerootDir, "BlackOps3.exe"));
 
             return isValid;
         }
@@ -99,6 +101,33 @@ namespace Base
                 }
             }
             return path;
+        }
+
+        public static string GetFileHash(string filePath)
+        {
+            if(!File.Exists(filePath))
+            {
+                return string.Empty;
+            }
+            using (FileStream stream = File.OpenRead(filePath))
+            {
+                var sha = new SHA256Managed();
+                byte[] checksum = sha.ComputeHash(stream);
+                return BitConverter.ToString(checksum).Replace("-", String.Empty);
+            }
+        }
+
+        public static bool IsHashEqual(string sha256_1, string sha256_2)
+        {
+            return 
+                sha256_1.Equals(sha256_2) && 
+                sha256_1 != string.Empty  && 
+                sha256_2 != string.Empty;
+        }
+
+        public static bool AreFilesEqual(string file1, string file2)
+        {
+            return IsHashEqual(GetFileHash(file1), GetFileHash(file2));
         }
 
     }

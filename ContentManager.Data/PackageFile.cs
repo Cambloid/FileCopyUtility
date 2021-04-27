@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,5 +29,8 @@ namespace ContentManager.Data
         public string Name { get; set; }
 
         public bool DoNotCopy { get; set; }
+
+        [JsonIgnore]
+        public bool ExistsInGameRoot { get; set; }
     }
 }

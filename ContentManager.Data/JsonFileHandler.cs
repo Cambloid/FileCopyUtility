@@ -8,39 +8,41 @@ using System.Threading.Tasks;
 
 namespace ContentManager.Data
 {
-    
-    public class JsonHeader
+
+    public class JsonContent
     {
-        public JsonHeader()
+
+        public JsonContent()
         {
             this.PackageCollection = new List<Package>();
+            this.FileConflictCollection = new List<FileConflict>();
         }
 
         [JsonProperty("Packages")]
         public List<Package> PackageCollection;
+
+        [JsonProperty("Conflicts")]
+        public List<FileConflict> FileConflictCollection;
+
     }
-    public class JsonFile
+
+    public class JsonFileHandler
     {
         #region Private vars
 
-        private const string JSON_PACKAGE = "Package";
-
-        private const string JSON_PACKAGE_FILE = "PackageFile";
-
         private string jsonFilePath = string.Empty;
-
 
         #endregion
 
         #region Constructor
 
-        public JsonFile() {
-            this.Header = new JsonHeader();
+        public JsonFileHandler() {
+            this.Content = new JsonContent();
         }
 
-        public JsonFile(string jsonFilePath)
+        public JsonFileHandler(string jsonFilePath)
         {
-            this.Header = new JsonHeader();
+            this.Content = new JsonContent();
 
             this.jsonFilePath = jsonFilePath;
             this.loadJson();
@@ -59,7 +61,7 @@ namespace ContentManager.Data
 
         #region Public properties
 
-        public JsonHeader Header {
+        public JsonContent Content {
             get;
             set;
         }
@@ -74,10 +76,10 @@ namespace ContentManager.Data
             {
                 string jsonContent = File.ReadAllText(this.jsonFilePath);
                 // Load packages
-                var header = JsonConvert.DeserializeObject<JsonHeader>(jsonContent);
+                var header = JsonConvert.DeserializeObject<JsonContent>(jsonContent);
                 if(header != null)
                 {
-                    this.Header = header;
+                    this.Content = header;
                 }
 
             } catch(Exception ex)
@@ -90,11 +92,11 @@ namespace ContentManager.Data
         {
             try
             {
-                if (this.Header == null)
+                if (this.Content == null)
                 {
                     return;
                 }
-                string jsonContent = JsonConvert.SerializeObject(this.Header, Formatting.Indented);
+                string jsonContent = JsonConvert.SerializeObject(this.Content, Formatting.Indented);
                 File.WriteAllText(this.jsonFilePath, jsonContent);
 
             }

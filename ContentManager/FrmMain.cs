@@ -138,7 +138,9 @@ namespace ContentManager
                     return false;
                 }
 
-                this.project = new Project(dbPath);
+                this.project = new Project(
+                    dbPath, 
+                    Properties.Settings.Default.GameRoot);
 
                 return true;
             } catch (Exception ex)

@@ -9,11 +9,18 @@ namespace ContentManager.Data
 {
     public class Package
     {
+        public enum PackageStatus
+        {
+            Installed,
+            Not_Installed
+        }
 
         public Package(string pkgName, int id)
         {
             this.PkgId = id;
             this.Name = pkgName;
+
+            this.Status = PackageStatus.Not_Installed;
 
             this.FileCollection = new List<PackageFile>();
             this.Path = string.Empty;
@@ -30,6 +37,10 @@ namespace ContentManager.Data
         public string Path { get; set; }
 
         public string[] Credits { get; set; }
+
+        // Do not save this field in json
+        [JsonIgnore]
+        public PackageStatus Status {get; set;}
 
         [JsonProperty("Files")]
         public List<PackageFile> FileCollection { get; set; }

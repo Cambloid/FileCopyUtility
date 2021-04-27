@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Base;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,26 +14,52 @@ namespace ContentManager.Data
 
         #region Private vars
 
-        private string rootDir = string.Empty;
+        private string projectRootDir = string.Empty;
         private const string JSON_DB_FILE_NAME = "PkgDatabase.json";
 
-        private JsonFile jFile;
+        private JsonFileHandler jFile;
+        private string gameRootDir = string.Empty;
 
         #endregion
 
         #region Constructor
 
-        public Project(string rootDir)
+        public Project(string projectRootDir, string gameRootDir)
         {
-            this.rootDir = rootDir;
-            string jsonPath = Path.Combine(rootDir, JSON_DB_FILE_NAME);
+            this.projectRootDir = projectRootDir;
+            this.gameRootDir = gameRootDir;
+
+            string jsonPath = Path.Combine(projectRootDir, JSON_DB_FILE_NAME);
             
             if(!File.Exists(jsonPath))
             {
                 File.Create(jsonPath);
             }
 
-            this.jFile = new JsonFile(jsonPath);
+            this.jFile = new JsonFileHandler(jsonPath);
+        }
+
+        #endregion
+
+        #region Public properties
+
+        // Directory where the BlackOps3.exe is
+        public string GameRootDir
+        {
+            get => this.gameRootDir;
+        }
+
+        // Directory where the project json file is
+        public string ProjectRootDir
+        {
+            get => this.projectRootDir;
+        }
+
+        // Root directory where the mod files are stored,
+        // same dir and file structure as the gameroot
+        public string ModSourceDir
+        {
+            get => Utility.AdvancedPathCombine(this.projectRootDir, "ModSource");
         }
 
         #endregion
@@ -46,27 +73,32 @@ namespace ContentManager.Data
                 throw new PackageException("Package \"" + pkgName + "\" already exists.");
             }
 
-            this.jFile.Header.PackageCollection.Add(new Package(pkgName, this.jFile.Header.PackageCollection.Count()));
+            this.jFile.Content.PackageCollection.Add(new Package(pkgName, this.jFile.Content.PackageCollection.Count()));
         }
 
         public void AddPkg(Package pkg)
         {
-            this.jFile.Header.PackageCollection.Add(pkg);
+            this.jFile.Content.PackageCollection.Add(pkg);
         }
 
         public void RemovePkg(int pkgId)
         {
-            this.jFile.Header.PackageCollection.RemoveAll(x => x.PkgId == pkgId);
+            this.jFile.Content.PackageCollection.RemoveAll(x => x.PkgId == pkgId);
         }
 
         public List<Package> GetPackages()
         {
-            return this.jFile.Header.PackageCollection;
+            return this.jFile.Content.PackageCollection;
         }
 
         public void Save()
         {
             this.jFile.Save();
+        }
+
+        public void UpdateConflicts(List<FileConflict> c)
+        {
+            this.jFile.Content.FileConflictCollection = c;
         }
 
         #endregion
@@ -75,7 +107,7 @@ namespace ContentManager.Data
 
         private Package GetPackageByName(string pkgName)
         {
-            return this.jFile.Header.PackageCollection.Find(pkg => pkg.Name == pkgName);
+            return this.jFile.Content.PackageCollection.Find(pkg => pkg.Name == pkgName);
         }
 
         #endregion

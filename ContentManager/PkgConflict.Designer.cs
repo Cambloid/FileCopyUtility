@@ -38,14 +38,15 @@ namespace ContentManager
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.grpFileOp = new System.Windows.Forms.GroupBox();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.button2 = new System.Windows.Forms.Button();
-            this.btnSelect = new System.Windows.Forms.Button();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.rdbDifferentPath = new System.Windows.Forms.RadioButton();
+            this.btnFileOtherPath = new System.Windows.Forms.Button();
+            this.btnSelectFile = new System.Windows.Forms.Button();
+            this.rdbOtherPkg = new System.Windows.Forms.RadioButton();
+            this.rdbUseThisPkg = new System.Windows.Forms.RadioButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.trvConflicts = new System.Windows.Forms.TreeView();
+            this.rdbUnresolved = new System.Windows.Forms.RadioButton();
+            this.cmbFileOtherPkg = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             this.grpAutomatic.SuspendLayout();
             this.grpFileOp.SuspendLayout();
@@ -101,7 +102,7 @@ namespace ContentManager
             // grpAutomatic
             // 
             this.grpAutomatic.Controls.Add(this.button3);
-            this.grpAutomatic.Location = new System.Drawing.Point(7, 135);
+            this.grpAutomatic.Location = new System.Drawing.Point(7, 187);
             this.grpAutomatic.Name = "grpAutomatic";
             this.grpAutomatic.Size = new System.Drawing.Size(444, 206);
             this.grpAutomatic.TabIndex = 66;
@@ -110,7 +111,7 @@ namespace ContentManager
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(182, 108);
+            this.button1.Location = new System.Drawing.Point(182, 151);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(64, 21);
             this.button1.TabIndex = 65;
@@ -121,7 +122,7 @@ namespace ContentManager
             // 
             this.comboBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(252, 108);
+            this.comboBox1.Location = new System.Drawing.Point(252, 151);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(146, 21);
             this.comboBox1.TabIndex = 63;
@@ -130,84 +131,77 @@ namespace ContentManager
             // 
             this.comboBox2.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(30, 108);
+            this.comboBox2.Location = new System.Drawing.Point(30, 151);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(146, 21);
             this.comboBox2.TabIndex = 64;
             // 
             // grpFileOp
             // 
-            this.grpFileOp.Controls.Add(this.radioButton3);
-            this.grpFileOp.Controls.Add(this.button2);
-            this.grpFileOp.Controls.Add(this.btnSelect);
-            this.grpFileOp.Controls.Add(this.textBox5);
-            this.grpFileOp.Controls.Add(this.radioButton2);
-            this.grpFileOp.Controls.Add(this.radioButton1);
-            this.grpFileOp.Location = new System.Drawing.Point(7, 3);
+            this.grpFileOp.Controls.Add(this.cmbFileOtherPkg);
+            this.grpFileOp.Controls.Add(this.rdbUnresolved);
+            this.grpFileOp.Controls.Add(this.rdbDifferentPath);
+            this.grpFileOp.Controls.Add(this.btnFileOtherPath);
+            this.grpFileOp.Controls.Add(this.btnSelectFile);
+            this.grpFileOp.Controls.Add(this.rdbOtherPkg);
+            this.grpFileOp.Controls.Add(this.rdbUseThisPkg);
+            this.grpFileOp.Location = new System.Drawing.Point(7, 10);
             this.grpFileOp.Name = "grpFileOp";
-            this.grpFileOp.Size = new System.Drawing.Size(444, 99);
+            this.grpFileOp.Size = new System.Drawing.Size(444, 128);
             this.grpFileOp.TabIndex = 62;
             this.grpFileOp.TabStop = false;
             this.grpFileOp.Text = "Use file from ...";
             // 
-            // radioButton3
+            // rdbDifferentPath
             // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(13, 65);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(72, 17);
-            this.radioButton3.TabIndex = 58;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "root folder";
-            this.radioButton3.UseVisualStyleBackColor = true;
+            this.rdbDifferentPath.AutoSize = true;
+            this.rdbDifferentPath.Location = new System.Drawing.Point(13, 90);
+            this.rdbDifferentPath.Name = "rdbDifferentPath";
+            this.rdbDifferentPath.Size = new System.Drawing.Size(87, 17);
+            this.rdbDifferentPath.TabIndex = 58;
+            this.rdbDifferentPath.TabStop = true;
+            this.rdbDifferentPath.Text = "different path";
+            this.rdbDifferentPath.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // btnFileOtherPath
             // 
-            this.button2.Location = new System.Drawing.Point(148, 63);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(244, 21);
-            this.button2.TabIndex = 57;
-            this.button2.Text = "Add file from root to new pkg";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnFileOtherPath.Location = new System.Drawing.Point(148, 88);
+            this.btnFileOtherPath.Name = "btnFileOtherPath";
+            this.btnFileOtherPath.Size = new System.Drawing.Size(244, 21);
+            this.btnFileOtherPath.TabIndex = 57;
+            this.btnFileOtherPath.Text = "Add file from root to new pkg";
+            this.btnFileOtherPath.UseVisualStyleBackColor = true;
             // 
-            // btnSelect
+            // btnSelectFile
             // 
-            this.btnSelect.Location = new System.Drawing.Point(397, 40);
-            this.btnSelect.Name = "btnSelect";
-            this.btnSelect.Size = new System.Drawing.Size(40, 21);
-            this.btnSelect.TabIndex = 56;
-            this.btnSelect.Text = "...";
-            this.btnSelect.UseVisualStyleBackColor = true;
+            this.btnSelectFile.Location = new System.Drawing.Point(397, 65);
+            this.btnSelectFile.Name = "btnSelectFile";
+            this.btnSelectFile.Size = new System.Drawing.Size(40, 21);
+            this.btnSelectFile.TabIndex = 56;
+            this.btnSelectFile.Text = "...";
+            this.btnSelectFile.UseVisualStyleBackColor = true;
             // 
-            // textBox5
+            // rdbOtherPkg
             // 
-            this.textBox5.Location = new System.Drawing.Point(148, 41);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.ReadOnly = true;
-            this.textBox5.Size = new System.Drawing.Size(243, 20);
-            this.textBox5.TabIndex = 55;
+            this.rdbOtherPkg.AutoSize = true;
+            this.rdbOtherPkg.Location = new System.Drawing.Point(13, 67);
+            this.rdbOtherPkg.Name = "rdbOtherPkg";
+            this.rdbOtherPkg.Size = new System.Drawing.Size(94, 17);
+            this.rdbOtherPkg.TabIndex = 53;
+            this.rdbOtherPkg.TabStop = true;
+            this.rdbOtherPkg.Text = "other package";
+            this.rdbOtherPkg.UseVisualStyleBackColor = true;
             // 
-            // radioButton2
+            // rdbUseThisPkg
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(13, 42);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(94, 17);
-            this.radioButton2.TabIndex = 53;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "other package";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(13, 19);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(86, 17);
-            this.radioButton1.TabIndex = 52;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "this package";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.rdbUseThisPkg.AutoSize = true;
+            this.rdbUseThisPkg.Location = new System.Drawing.Point(13, 44);
+            this.rdbUseThisPkg.Name = "rdbUseThisPkg";
+            this.rdbUseThisPkg.Size = new System.Drawing.Size(86, 17);
+            this.rdbUseThisPkg.TabIndex = 52;
+            this.rdbUseThisPkg.TabStop = true;
+            this.rdbUseThisPkg.Text = "this package";
+            this.rdbUseThisPkg.UseVisualStyleBackColor = true;
             // 
             // splitContainer1
             // 
@@ -238,6 +232,26 @@ namespace ContentManager
             this.trvConflicts.Name = "trvConflicts";
             this.trvConflicts.Size = new System.Drawing.Size(521, 792);
             this.trvConflicts.TabIndex = 62;
+            // 
+            // rdbUnresolved
+            // 
+            this.rdbUnresolved.AutoSize = true;
+            this.rdbUnresolved.Location = new System.Drawing.Point(13, 21);
+            this.rdbUnresolved.Name = "rdbUnresolved";
+            this.rdbUnresolved.Size = new System.Drawing.Size(79, 17);
+            this.rdbUnresolved.TabIndex = 59;
+            this.rdbUnresolved.TabStop = true;
+            this.rdbUnresolved.Text = "Unresolved";
+            this.rdbUnresolved.UseVisualStyleBackColor = true;
+            // 
+            // cmbFileOtherPkg
+            // 
+            this.cmbFileOtherPkg.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmbFileOtherPkg.FormattingEnabled = true;
+            this.cmbFileOtherPkg.Location = new System.Drawing.Point(148, 65);
+            this.cmbFileOtherPkg.Name = "cmbFileOtherPkg";
+            this.cmbFileOtherPkg.Size = new System.Drawing.Size(244, 21);
+            this.cmbFileOtherPkg.TabIndex = 67;
             // 
             // PkgConflict
             // 
@@ -270,13 +284,14 @@ namespace ContentManager
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.GroupBox grpFileOp;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button btnSelect;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton rdbDifferentPath;
+        private System.Windows.Forms.Button btnFileOtherPath;
+        private System.Windows.Forms.Button btnSelectFile;
+        private System.Windows.Forms.RadioButton rdbOtherPkg;
+        private System.Windows.Forms.RadioButton rdbUseThisPkg;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView trvConflicts;
+        private System.Windows.Forms.RadioButton rdbUnresolved;
+        private System.Windows.Forms.ComboBox cmbFileOtherPkg;
     }
 }
